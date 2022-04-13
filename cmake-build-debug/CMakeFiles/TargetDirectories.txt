@@ -1,0 +1,3 @@
+C:/Users/neagu/CLionProjects/MandelbrotSet/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/neagu/CLionProjects/MandelbrotSet/cmake-build-debug/CMakeFiles/MandelbrotSet.dir
+C:/Users/neagu/CLionProjects/MandelbrotSet/cmake-build-debug/CMakeFiles/edit_cache.dir
