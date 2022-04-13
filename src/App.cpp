@@ -1,8 +1,8 @@
 #include "App.hpp"
 
 App::App() :
-    win{ sf::VideoMode{ 800, 800 }, "Mandelbrot set", sf::Style::Close },
-    set{ win }
+    win{ sf::VideoMode{ 400, 400 }, "Mandelbrot set", sf::Style::Close },
+    set{ win, input }
 {
     setupWin();
     run();
@@ -15,7 +15,10 @@ void App::setupWin()
 
 void App::winEvents()
 {
+    input.update();
     for (sf::Event event{}; win.pollEvent(event);)
+    {
+        input.processEvent(event);
         switch (event.type)
         {
             case sf::Event::Closed:
@@ -24,6 +27,7 @@ void App::winEvents()
             default:
                 break;
         }
+    }
 }
 
 void App::run()
