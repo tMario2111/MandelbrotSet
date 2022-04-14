@@ -3,7 +3,7 @@
 MandelbrotSet::MandelbrotSet(sf::RenderWindow& win, Input& input) :
     win{ win },
     input{ input },
-    view{ win.getView() },
+    view{ 0.0, 0.0, static_cast<long double>(win.getSize().x), static_cast<long double>(win.getSize().y) },
     vertices{ sf::PrimitiveType::Points, win.getSize().x * win.getSize().y }
 {
     auto k = 0u;
@@ -16,32 +16,38 @@ void MandelbrotSet::update()
 {
     if (input.isKeyReleased(sf::Keyboard::Add))
     {
-        view.zoom(0.5f);
+        view.left += view.width / 4;
+        view.top += view.height / 4;
+        view.width /= 2;
+        view.height /= 2;
         needs_update = true;
     }
     else if (input.isKeyPressed(sf::Keyboard::Subtract))
     {
-        view.zoom(2.f);
+        view.left -= view.width / 2;
+        view.top -= view.height / 2;
+        view.width *= 2;
+        view.height *= 2;
         needs_update = true;
     }
     else if (input.isKeyPressed(sf::Keyboard::W))
     {
-        view.move(sf::Vector2f{ 0.f, -view.getSize().y / 2 });
+        view.top -= view.height / 2;
         needs_update = true;
     }
     else if (input.isKeyPressed(sf::Keyboard::S))
     {
-        view.move(sf::Vector2f{ 0.f, +view.getSize().y / 2 });
+        view.top += view.height / 2;
         needs_update = true;
     }
     else if (input.isKeyPressed(sf::Keyboard::A))
     {
-        view.move(sf::Vector2f{ -view.getSize().x / 2, 0.f });
+        view.left -= view.width / 2;
         needs_update = true;
     }
     else if (input.isKeyPressed(sf::Keyboard::D))
     {
-        view.move(sf::Vector2f{ +view.getSize().x / 2, 0.f });
+        view.left += view.width / 2;
         needs_update = true;
     }
 
@@ -50,7 +56,7 @@ void MandelbrotSet::update()
 
     needs_update = false;
 
-    const int max_iterations = 100;
+    const int max_iterations = 1000;
 
     const long double win_size_x = win.getSize().x;
     const long double win_size_y = win.getSize().y;
@@ -61,17 +67,11 @@ void MandelbrotSet::update()
     const long double domain_y_1 = -1.12;
     const long double domain_y_s = 2.24;
 
-    sf::FloatRect bounds;
-    bounds.left = view.getCenter().x - view.getSize().x / 2;
-    bounds.top = view.getCenter().y - view.getSize().y / 2;
-    bounds.width = view.getSize().x;
-    bounds.height = view.getSize().y;
+    const auto increment_x = view.width / static_cast<float>(win_size_x);
+    const auto increment_y = view.height / static_cast<float>(win_size_y);
 
-    const auto increment_x = bounds.width / static_cast<float>(win_size_x);
-    const auto increment_y = bounds.height / static_cast<float>(win_size_y);
-
-    auto left = bounds.left;
-    auto top = bounds.top;
+    auto left = view.left;
+    auto top = view.top;
 
     auto k = 0u;
     unsigned int iterations;
@@ -81,7 +81,7 @@ void MandelbrotSet::update()
 
     for (auto i = 0u; i < win.getSize().x; i++)
     {
-        top = bounds.top;
+        top = view.top;
         for (auto j = 0u; j < win.getSize().y; j++)
         {
             x0 = domain_x_1 + static_cast<long double>(left) / win_size_x * domain_x_s;

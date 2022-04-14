@@ -15,7 +15,7 @@ public:
 private:
     sf::RenderWindow& win;
     Input& input;
-    sf::View view;
+    sf::Rect<long double> view;
     sf::VertexArray vertices;
     bool needs_update = true;
 };
