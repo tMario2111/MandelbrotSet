@@ -3,6 +3,7 @@
 MandelbrotSet::MandelbrotSet(sf::RenderWindow& win, Input& input) :
     win{ win },
     input{ input },
+    view{ win.getView() },
     vertices{ sf::PrimitiveType::Points, win.getSize().x * win.getSize().y }
 {
     auto k = 0u;
@@ -13,7 +14,6 @@ MandelbrotSet::MandelbrotSet(sf::RenderWindow& win, Input& input) :
 
 void MandelbrotSet::update()
 {
-    auto view = win.getView();
     if (input.isKeyReleased(sf::Keyboard::Add))
     {
         view.zoom(0.5f);
@@ -44,14 +44,13 @@ void MandelbrotSet::update()
         view.move(sf::Vector2f{ +view.getSize().x / 2, 0.f });
         needs_update = true;
     }
-    win.setView(view);
 
     if (!needs_update)
         return;
 
     needs_update = false;
 
-    const int max_iterations = 1000;
+    const int max_iterations = 100;
 
     const long double win_size_x = win.getSize().x;
     const long double win_size_y = win.getSize().y;
@@ -63,10 +62,10 @@ void MandelbrotSet::update()
     const long double domain_y_s = 2.24;
 
     sf::FloatRect bounds;
-    bounds.left = win.getView().getCenter().x - win.getView().getSize().x / 2;
-    bounds.top = win.getView().getCenter().y - win.getView().getSize().y / 2;
-    bounds.width = win.getView().getSize().x;
-    bounds.height = win.getView().getSize().y;
+    bounds.left = view.getCenter().x - view.getSize().x / 2;
+    bounds.top = view.getCenter().y - view.getSize().y / 2;
+    bounds.width = view.getSize().x;
+    bounds.height = view.getSize().y;
 
     const auto increment_x = bounds.width / static_cast<float>(win_size_x);
     const auto increment_y = bounds.height / static_cast<float>(win_size_y);
@@ -98,7 +97,6 @@ void MandelbrotSet::update()
                 y2 = y * y;
                 iterations++;
             }
-            vertices[k].position = sf::Vector2f{ left, top };
             vertices[k].color = iterations == max_iterations ? sf::Color::Black : sf::Color::White;
             k++;
             top += increment_y;
