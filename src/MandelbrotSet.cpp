@@ -1,17 +1,33 @@
 #include "MandelbrotSet.hpp"
 
-MandelbrotSet::MandelbrotSet(sf::RenderWindow& win, Input& input) :
+MandelbrotSet::MandelbrotSet(sf::RenderWindow& win, Input& input, sf::Font& font) :
     win{ win },
     input{ input },
-    view{ 0.f, 0.f, static_cast<float>(win.getSize().x), static_cast<float>(win.getSize().y) },
+    font{ font },
+    view{ 0.0, 0.0, static_cast<double>(win.getSize().x), static_cast<double>(win.getSize().y) },
     vertices{ sf::PrimitiveType::Points, win.getSize().x * win.getSize().y }
 {
+    setupText();
     points.resize(win.getSize().x * win.getSize().y);
 
     auto k = 0u;
     for (auto i = 0u; i < win.getSize().x; i++)
         for (auto j = 0u; j < win.getSize().y; j++)
             vertices[k++].position = sf::Vector2f{ static_cast<float>(i), static_cast<float>(j) };
+}
+
+void MandelbrotSet::setupText()
+{
+    iterations_text.setFont(font);
+    iterations_text.setCharacterSize(25);
+    iterations_text.setString("MAX ITERATIONS: " + std::to_string(max_iterations));
+    iterations_text.setPosition(-iterations_text.getLocalBounds().left + 5.f, 0.f);
+
+    threads_text.setFont(font);
+    threads_text.setCharacterSize(25);
+    threads_text.setString("CPU THREADS: " + std::to_string(thread_count));
+    threads_text.setPosition(-threads_text.getLocalBounds().left + 5.f, 
+        iterations_text.getGlobalBounds().top + iterations_text.getGlobalBounds().height);
 }
 
 void MandelbrotSet::control()
@@ -52,33 +68,50 @@ void MandelbrotSet::control()
         view.left += view.width / 4;
         needs_update = true;
     }
+    else if (input.isKeyPressed(sf::Keyboard::O))
+    {
+        max_iterations += 100;
+        needs_update = true;
+    }
+    else if (input.isKeyPressed(sf::Keyboard::I) && max_iterations > 100)
+    {
+        max_iterations -= 100;
+        needs_update = true;
+    }
+    else if (input.isKeyPressed(sf::Keyboard::L))
+        thread_count++;
+    else if (input.isKeyPressed(sf::Keyboard::K) && thread_count > 1)
+        thread_count--;
+
+    iterations_text.setString("MAX ITERATIONS: " + std::to_string(max_iterations));
+    threads_text.setString("CPU THREADS: " + std::to_string(thread_count));
 }
 
 void MandelbrotSet::fractal(unsigned int c_thread)
 {
     const unsigned int column_lenght = win.getSize().x / thread_count;
 
-    const float win_size_x = win.getSize().x;
-    const float win_size_y = win.getSize().y;
+    const double win_size_x = win.getSize().x;
+    const double win_size_y = win.getSize().y;
 
-    const auto domain_x_1 = -2.0f;
-    const auto domain_x_s = 2.47f;
+    const double domain_x_1 = -2.0f;
+    const double domain_x_s = 2.47;
 
-    const auto domain_y_1 = -1.12f;
-    const auto domain_y_s = 2.24f;
+    const double domain_y_1 = -1.12;
+    const double domain_y_s = 2.24;
 
-    const auto increment_x = view.width / static_cast<float>(win_size_x);
-    const auto increment_y = view.height / static_cast<float>(win_size_y);
+    const auto increment_x = view.width / static_cast<double>(win_size_x);
+    const auto increment_y = view.height / static_cast<double>(win_size_y);
 
     auto left = view.left + c_thread * (view.width / thread_count);
     auto top = view.top;
 
     unsigned int iterations;
-    float x, y;
-    float x0, y0;
-    float x2, y2;
+    double x, y;
+    double x0, y0;
+    double x2, y2;
     
-    const auto a = 0.1f;
+    const double a = 0.0f;
 
     unsigned int i, j;
     for (i = c_thread * column_lenght; i < (c_thread + 1) * column_lenght; i++)
@@ -88,10 +121,10 @@ void MandelbrotSet::fractal(unsigned int c_thread)
         {
             x0 = domain_x_1 + left / win_size_x * domain_x_s;
             y0 = domain_y_1 + top / win_size_y * domain_y_s;
-            x = 0.f, y = 0.f;
-            x2 = 0.f, y2 = 0.f;
+            x = 0.0, y = 0.0;
+            x2 = 0.0, y2 = 0.0;
             iterations = 0;
-            while (x2 + y2 <= 4.f && iterations < max_iterations)
+            while (x2 + y2 <= 4.0 && iterations < max_iterations)
             {
                 y = 2 * x * y + y0;
                 x = x2 - y2 + x0;
@@ -140,4 +173,7 @@ void MandelbrotSet::render()
             vertices[k].color.b = static_cast<sf::Uint8>(255.f * (0.5f * sinf(it * a + 4.188f) + 0.5f));
         }
     win.draw(vertices);
+
+    win.draw(iterations_text);
+    win.draw(threads_text);
 }
