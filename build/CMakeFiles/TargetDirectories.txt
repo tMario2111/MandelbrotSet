@@ -1,0 +1,3 @@
+C:/dev/VSCode projects/c++/MandelbrotSet/build/CMakeFiles/MandelbrotSet.dir
+C:/dev/VSCode projects/c++/MandelbrotSet/build/CMakeFiles/ALL_BUILD.dir
+C:/dev/VSCode projects/c++/MandelbrotSet/build/CMakeFiles/ZERO_CHECK.dir

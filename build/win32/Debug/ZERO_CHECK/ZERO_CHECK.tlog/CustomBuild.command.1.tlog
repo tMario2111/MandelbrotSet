@@ -1,0 +1,10 @@
+^C:\DEV\VSCODE PROJECTS\C++\MANDELBROTSET\BUILD\CMAKEFILES\F63BC29D04C42CC54037B80182EA5882\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/dev/VSCode projects/c++/MandelbrotSet" "-BC:/dev/VSCode projects/c++/MandelbrotSet/build" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "C:/dev/VSCode projects/c++/MandelbrotSet/build/MandelbrotSet.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

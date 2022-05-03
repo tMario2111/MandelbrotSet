@@ -1,7 +1,7 @@
 #include "App.hpp"
 
 App::App() :
-    win{ sf::VideoMode{ 600, 600 }, "Mandelbrot set", sf::Style::Close },
+    win{ sf::VideoMode{ 800, 800 }, "Mandelbrot set", sf::Style::Close },
     set{ win, input }
 {
     setupWin();
@@ -10,7 +10,7 @@ App::App() :
 
 void App::setupWin()
 {
-    win.setFramerateLimit(10);
+    win.setFramerateLimit(15);
 }
 
 void App::winEvents()

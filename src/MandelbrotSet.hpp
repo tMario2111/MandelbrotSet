@@ -4,6 +4,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <cmath>
+#include <thread>
 #include <vector>
 
 class MandelbrotSet
@@ -15,7 +17,12 @@ public:
 private:
     sf::RenderWindow& win;
     Input& input;
-    sf::Rect<long double> view;
+    sf::FloatRect view;
     sf::VertexArray vertices;
+    std::vector<unsigned int> points;
     bool needs_update = true;
+    unsigned int max_iterations = 1000;
+    unsigned int thread_count = 16;
+    void control();
+    void fractal(unsigned int c_thread);
 };
