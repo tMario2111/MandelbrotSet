@@ -1,7 +1,7 @@
 #include "App.hpp"
 
 App::App() :
-    win{ sf::VideoMode{ 400, 400 }, "Mandelbrot set", sf::Style::Close },
+    win{ sf::VideoMode{ 600, 600 }, "Mandelbrot set", sf::Style::Close },
     set{ win, input }
 {
     setupWin();

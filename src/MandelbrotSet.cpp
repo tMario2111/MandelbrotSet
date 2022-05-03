@@ -73,15 +73,11 @@ void MandelbrotSet::update()
     auto left = view.left;
     auto top = view.top;
 
+    auto k = 0u;
     unsigned int iterations;
     long double x, y;
     long double x0, y0;
     long double x2, y2;
-
-    std::vector<std::vector<unsigned int>> iterations_counts;
-    iterations_counts.resize(win.getSize().x);
-    for (auto& i : iterations_counts)
-        i.resize(win.getSize().y);
 
     for (auto i = 0u; i < win.getSize().x; i++)
     {
@@ -101,32 +97,12 @@ void MandelbrotSet::update()
                 y2 = y * y;
                 iterations++;
             }
-            iterations_counts[i][j] = iterations;
+            vertices[k].color = iterations == max_iterations ? sf::Color::Black : sf::Color::White;
+            k++;
             top += increment_y;
         }
         left += increment_x;
     }
-
-    std::vector<unsigned int> num_iterations_per_pixel;
-    num_iterations_per_pixel.resize(max_iterations + 1);
-    for (auto i = 0u; i < win.getSize().x; i++)
-        for (auto j = 0u; j < win.getSize().y; j++)
-            num_iterations_per_pixel[iterations_counts[i][j]]++;
-
-    auto total = 0u;
-    for (const auto i : num_iterations_per_pixel)
-        total += i;
-
-    auto c = 0u;
-    for (auto i = 0u; i < win.getSize().x; i++)
-        for (auto j = 0u; j < win.getSize().y; j++)
-        {
-            auto hue = 0.f;
-            for (auto k = 0u; k <= iterations_counts[i][j]; k++)
-                hue += static_cast<float>(num_iterations_per_pixel[k]) / static_cast<float>(total);
-            vertices[c++].color = sf::Color{ 0, 0, static_cast<sf::Uint8>(hue * 255.f) };
-        }
-
 }
 
 void MandelbrotSet::render()
