@@ -69,7 +69,7 @@ void MandelbrotSet::fractal(unsigned int c_thread)
     const double win_size_x = win.getSize().x;
     const double win_size_y = win.getSize().y;
 
-    const double domain_x_1 = -2.0f;
+    const double domain_x_1 = -2.0;
     const double domain_x_s = 2.47;
 
     const double domain_y_1 = -1.12;
@@ -86,7 +86,7 @@ void MandelbrotSet::fractal(unsigned int c_thread)
     double x0, y0;
     double x2, y2;
     
-    const double a = 0.0f;
+    const double a = 0.0;
 
     unsigned int i, j;
     for (i = c_thread * column_lenght; i < (c_thread + 1) * column_lenght; i++)
@@ -136,7 +136,7 @@ void MandelbrotSet::render()
 {
     const auto a = 0.1f;
     unsigned int k;
-    float it;
+    double it;
     unsigned int i, j;
     if (needs_update)
     {
@@ -145,7 +145,7 @@ void MandelbrotSet::render()
             for (j = 0; j < win.getSize().y; j++)
             {
                 k = i * win.getSize().y + j;
-                it = static_cast<float>(points[k]);
+                it = static_cast<double>(points[k]);
                 vertices[k].color.r = static_cast<sf::Uint8>(255.0 * (0.5 * sin(it * a) + 0.5));
                 vertices[k].color.g = static_cast<sf::Uint8>(255.0 * (0.5 * sin(it * a + M_PI_4) + 0.5)); // Colors might change
                 vertices[k].color.b = static_cast<sf::Uint8>(255.0 * (0.5 * sin(it * a + M_PI) + 0.5));
