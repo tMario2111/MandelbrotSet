@@ -1,13 +1,11 @@
 #include "MandelbrotSet.hpp"
 
-MandelbrotSet::MandelbrotSet(sf::RenderWindow& win, Input& input, sf::Font& font) :
+MandelbrotSet::MandelbrotSet(sf::RenderWindow& win, Input& input) :
     win{ win },
     input{ input },
-    font{ font },
     view{ 0.0, 0.0, static_cast<double>(win.getSize().x), static_cast<double>(win.getSize().y) },
     vertices{ sf::PrimitiveType::Points, win.getSize().x * win.getSize().y }
 {
-    setupText();
     points.resize(win.getSize().x * win.getSize().y);
 
     auto k = 0u;
@@ -16,18 +14,12 @@ MandelbrotSet::MandelbrotSet(sf::RenderWindow& win, Input& input, sf::Font& font
             vertices[k++].position = sf::Vector2f{ static_cast<float>(i), static_cast<float>(j) };
 }
 
-void MandelbrotSet::setupText()
+void MandelbrotSet::gui()
 {
-    iterations_text.setFont(font);
-    iterations_text.setCharacterSize(25);
-    iterations_text.setString("MAX ITERATIONS: " + std::to_string(max_iterations));
-    iterations_text.setPosition(-iterations_text.getLocalBounds().left + 5.f, 0.f);
-
-    threads_text.setFont(font);
-    threads_text.setCharacterSize(25);
-    threads_text.setString("CPU THREADS: " + std::to_string(thread_count));
-    threads_text.setPosition(-threads_text.getLocalBounds().left + 5.f, 
-        iterations_text.getGlobalBounds().top + iterations_text.getGlobalBounds().height);
+    ImGui::Begin("SETTINGS");
+    ImGui::SliderInt("Iterations", &max_iterations, 100, 1000);
+    ImGui::SliderInt("Threads", &thread_count, 1, 32);
+    ImGui::End();
 }
 
 void MandelbrotSet::control()
@@ -68,23 +60,6 @@ void MandelbrotSet::control()
         view.left += view.width / 4;
         needs_update = true;
     }
-    else if (input.isKeyPressed(sf::Keyboard::O))
-    {
-        max_iterations += 100;
-        needs_update = true;
-    }
-    else if (input.isKeyPressed(sf::Keyboard::I) && max_iterations > 100)
-    {
-        max_iterations -= 100;
-        needs_update = true;
-    }
-    else if (input.isKeyPressed(sf::Keyboard::L))
-        thread_count++;
-    else if (input.isKeyPressed(sf::Keyboard::K) && thread_count > 1)
-        thread_count--;
-
-    iterations_text.setString("MAX ITERATIONS: " + std::to_string(max_iterations));
-    threads_text.setString("CPU THREADS: " + std::to_string(thread_count));
 }
 
 void MandelbrotSet::fractal(unsigned int c_thread)
@@ -141,11 +116,11 @@ void MandelbrotSet::fractal(unsigned int c_thread)
 
 void MandelbrotSet::update()
 {
+    gui();
     control();
 
     if (!needs_update)
         return;
-    needs_update = false;
 
     std::vector<std::thread> threads;
     threads.resize(thread_count);
@@ -163,17 +138,18 @@ void MandelbrotSet::render()
     unsigned int k;
     float it;
     unsigned int i, j;
-    for (i = 0; i < win.getSize().x; i++)
-        for (j = 0; j < win.getSize().y; j++)
-        {
-            k = i * win.getSize().y + j;
-            it = static_cast<float>(points[k]);
-            vertices[k].color.r = static_cast<sf::Uint8>(255.f * (0.5f * sinf(it * a) + 0.5f));
-            vertices[k].color.g = static_cast<sf::Uint8>(255.f * (0.5f * sinf(it * a + 2.094f) + 0.5f));
-            vertices[k].color.b = static_cast<sf::Uint8>(255.f * (0.5f * sinf(it * a + 4.188f) + 0.5f));
-        }
+    if (needs_update)
+    {
+        needs_update = false;
+        for (i = 0; i < win.getSize().x; i++)
+            for (j = 0; j < win.getSize().y; j++)
+            {
+                k = i * win.getSize().y + j;
+                it = static_cast<float>(points[k]);
+                vertices[k].color.r = static_cast<sf::Uint8>(255.0 * (0.5 * sin(it * a) + 0.5));
+                vertices[k].color.g = static_cast<sf::Uint8>(255.0 * (0.5 * sin(it * a + M_PI_4) + 0.5)); // Colors might change
+                vertices[k].color.b = static_cast<sf::Uint8>(255.0 * (0.5 * sin(it * a + M_PI) + 0.5));
+            }
+    }
     win.draw(vertices);
-
-    win.draw(iterations_text);
-    win.draw(threads_text);
 }

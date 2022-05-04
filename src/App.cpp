@@ -1,29 +1,32 @@
 #include "App.hpp"
 
-App::App() :
-    win{ sf::VideoMode{ 800, 800 }, "Mandelbrot set", sf::Style::Close }
+App::App()
 {
     setupWin();
-    loadAssets();
-    set = std::make_unique<MandelbrotSet>(win, input, font);
+    setupGui();
+    set = std::make_unique<MandelbrotSet>(win, input);
     run();
 }
 
 void App::setupWin()
 {
-    win.setFramerateLimit(15);
+    win.create(sf::VideoMode{ 800, 800 }, "Mandelbrot Set", sf::Style::Close);
+    win.setFramerateLimit(30);
 }
 
-void App::loadAssets()
+void App::setupGui()
 {
-    font.loadFromFile("Pixellari.ttf");
+    ImGui::SFML::Init(win);
+    ImGui::GetIO().IniFilename = nullptr;
 }
 
 void App::winEvents()
 {
+    dt = win_clock.restart();
     input.update();
     for (sf::Event event{}; win.pollEvent(event);)
     {
+        ImGui::SFML::ProcessEvent(event);
         input.processEvent(event);
         switch (event.type)
         {
@@ -41,9 +44,14 @@ void App::run()
     while (win.isOpen())
     {
         winEvents();
+        
+        ImGui::SFML::Update(win, dt);
         set->update();
+
         win.clear();
         set->render();
+        ImGui::SFML::Render(win);
         win.display();
     }
+    ImGui::SFML::Shutdown();
 }
