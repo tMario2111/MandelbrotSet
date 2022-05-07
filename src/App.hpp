@@ -18,7 +18,7 @@ public:
     sf::RenderWindow win;
     sf::Time dt;
 private:
-    const std::string title = "Mandebrot Set";
+    const std::string title = "Mandelbrot Set";
     const unsigned int framerate_limit = 30;
     sf::VideoMode prevMove{ 800, 800 };
     bool fullscreen = false;
@@ -27,6 +27,8 @@ private:
     std::unique_ptr<MandelbrotSet> set;
     void setupWin();
     void setupGui();
+    void resizeEvent(const sf::Event& event);
+    void toggleFullscreen();
     void winEvents();
     void run();
 };

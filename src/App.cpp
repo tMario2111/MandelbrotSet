@@ -20,6 +20,34 @@ void App::setupGui()
     ImGui::GetIO().IniFilename = nullptr;
 }
 
+void App::resizeEvent(const sf::Event& event)
+{
+    auto view = win.getView();
+    view.setSize(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
+    win.setView(view);
+    prevMove.width = event.size.width;
+    prevMove.height = event.size.height;
+    set->onResize();
+}
+
+void App::toggleFullscreen()
+{
+    if (!fullscreen)
+    {
+        fullscreen = true;
+        auto video_mode = sf::VideoMode::getDesktopMode();
+        video_mode.height++;
+        win.create(video_mode, title, sf::Style::None);
+    }
+    else 
+    {
+        fullscreen = false;
+        win.create(prevMove, title, sf::Style::Close | sf::Style::Resize);
+    }
+    win.setFramerateLimit(framerate_limit);
+    set->onResize();
+}   
+
 void App::winEvents()
 {
     dt = win_clock.restart();
@@ -34,32 +62,11 @@ void App::winEvents()
                 win.close();
                 break;
             case sf::Event::Resized:
-                win.setView(sf::View{ win.getView().getCenter(), 
-                    sf::Vector2f{ static_cast<float>(event.size.width), 
-                                  static_cast<float>(event.size.height) } });
-                prevMove.width = event.size.width;
-                prevMove.height = event.size.height;
-                set->onResize();
+                resizeEvent(event);
                 break;
             case sf::Event::KeyReleased:
                 if (event.key.code == sf::Keyboard::F11)
-                {
-                    if (!fullscreen)
-                    {
-                        fullscreen = true;
-                        win.create(sf::VideoMode{ sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height + 1 }, 
-                            title, sf::Style::None);
-                        win.setFramerateLimit(framerate_limit);
-                        set->onResize();
-                    }
-                    else 
-                    {
-                        fullscreen = false;
-                        win.create(prevMove, title, sf::Style::Close | sf::Style::Resize);
-                        win.setFramerateLimit(framerate_limit);
-                        set->onResize();
-                    }
-                }
+                    toggleFullscreen();
                 break;
             default:
                 break;
