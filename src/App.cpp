@@ -10,8 +10,8 @@ App::App()
 
 void App::setupWin()
 {
-    win.create(sf::VideoMode{ 800, 800 }, "Mandelbrot Set", sf::Style::Close);
-    win.setFramerateLimit(30);
+    win.create(prevMove, title, sf::Style::Close | sf::Style::Resize);
+    win.setFramerateLimit(framerate_limit);
 }
 
 void App::setupGui()
@@ -32,6 +32,34 @@ void App::winEvents()
         {
             case sf::Event::Closed:
                 win.close();
+                break;
+            case sf::Event::Resized:
+                win.setView(sf::View{ win.getView().getCenter(), 
+                    sf::Vector2f{ static_cast<float>(event.size.width), 
+                                  static_cast<float>(event.size.height) } });
+                prevMove.width = event.size.width;
+                prevMove.height = event.size.height;
+                set->onResize();
+                break;
+            case sf::Event::KeyReleased:
+                if (event.key.code == sf::Keyboard::F11)
+                {
+                    if (!fullscreen)
+                    {
+                        fullscreen = true;
+                        win.create(sf::VideoMode{ sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height + 1 }, 
+                            title, sf::Style::None);
+                        win.setFramerateLimit(framerate_limit);
+                        set->onResize();
+                    }
+                    else 
+                    {
+                        fullscreen = false;
+                        win.create(prevMove, title, sf::Style::Close | sf::Style::Resize);
+                        win.setFramerateLimit(framerate_limit);
+                        set->onResize();
+                    }
+                }
                 break;
             default:
                 break;

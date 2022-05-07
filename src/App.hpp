@@ -9,6 +9,7 @@
 #include <imgui-SFML.h>
 
 #include <memory>
+#include <string>
 
 class App
 {
@@ -17,6 +18,10 @@ public:
     sf::RenderWindow win;
     sf::Time dt;
 private:
+    const std::string title = "Mandebrot Set";
+    const unsigned int framerate_limit = 30;
+    sf::VideoMode prevMove{ 800, 800 };
+    bool fullscreen = false;
     sf::Clock win_clock;
     Input input;
     std::unique_ptr<MandelbrotSet> set;
