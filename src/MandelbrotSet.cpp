@@ -29,10 +29,53 @@ void MandelbrotSet::onResize()
 
 void MandelbrotSet::gui()
 {
+    const auto spacing = []{ ImGui::Dummy(ImVec2{ 0.f, 10.f }); };
+    const char* functions[] = { "sin", "cos", "tan" };
     ImGui::Begin("SETTINGS");
-    ImGui::SliderInt("Iterations", &max_iterations, 100, 1000);
+
+    if (ImGui::InputDouble("Red modifier", &r_modifier) || 
+        ImGui::ListBox("Red function", reinterpret_cast<int*>(&r_func), functions, 3))
+        needs_update = true;
+
+    spacing();
+
+    if (ImGui::InputDouble("Green modifier", &g_modifier) || 
+        ImGui::ListBox("Green function", reinterpret_cast<int*>(&g_func), functions, 3))
+        needs_update = true;
+
+    spacing();
+
+    if (ImGui::InputDouble("Blue modifier", &b_modifier) || 
+        ImGui::ListBox("Blue function", reinterpret_cast<int*>(&b_func), functions, 3))
+        needs_update = true;
+
+    spacing();
+
+    if (ImGui::SliderInt("Iterations", &max_iterations, 100, 1000))
+        needs_update = true;
+
+    spacing();
+
     ImGui::SliderInt("Threads", &thread_count, 1, 32);
+
+    spacing();
+
+    ImGui::InputText("Filename", screenshot_name.data(), 100);
+    ImGui::SameLine();
+    if (ImGui::Button("Save"))
+        takeScreenshot();
+
     ImGui::End();
+}
+
+void MandelbrotSet::takeScreenshot()
+{
+    sf::RenderTexture texture{};
+    texture.create(win.getSize().x, win.getSize().y);
+    texture.setView(win.getView());
+    texture.draw(vertices);
+    texture.display();
+    texture.getTexture().copyToImage().saveToFile(screenshot_name + ".png");
 }
 
 void MandelbrotSet::control()
@@ -155,6 +198,7 @@ void MandelbrotSet::render()
     unsigned int k;
     f_type it;
     unsigned int i, j;
+    f_type r_aux, g_aux, b_aux;
     if (needs_update)
     {
         needs_update = false;
@@ -163,9 +207,31 @@ void MandelbrotSet::render()
             {
                 k = i * win.getSize().y + j;
                 it = static_cast<f_type>(points[k]);
-                vertices[k].color.r = static_cast<sf::Uint8>(255.0 * (0.5 * sin(it * a) + 0.5));
-                vertices[k].color.g = static_cast<sf::Uint8>(255.0 * (0.5 * sin(it * a + M_PI_2) + 0.5));
-                vertices[k].color.b = static_cast<sf::Uint8>(255.0 * (0.5 * sin(it * a + M_PI) + 0.5));
+
+                if (r_func == ColorFunction::Sin)
+                    r_aux = 0.5 * sin(it * a + r_modifier);
+                else if (r_func == ColorFunction::Cos)
+                    r_aux = 0.5 * cos(it * a + r_modifier);
+                else 
+                    r_aux = 0.5 * tan(it * a + r_modifier); 
+
+                if (g_func == ColorFunction::Sin)
+                    g_aux = 0.5 * sin(it * a + g_modifier);
+                else if (g_func == ColorFunction::Cos)
+                    g_aux = 0.5 * cos(it * a + g_modifier);
+                else 
+                    g_aux = 0.5 * tan(it * a + g_modifier); 
+
+                if (b_func == ColorFunction::Sin)
+                    b_aux = 0.5 * sin(it * a + b_modifier);
+                else if (r_func == ColorFunction::Cos)
+                    b_aux = 0.5 * cos(it * a + b_modifier);
+                else 
+                    b_aux = 0.5 * tan(it * a + b_modifier); 
+
+                vertices[k].color.r = static_cast<sf::Uint8>(255.0 * (r_aux + 0.5));
+                vertices[k].color.g = static_cast<sf::Uint8>(255.0 * (g_aux + 0.5));
+                vertices[k].color.b = static_cast<sf::Uint8>(255.0 * (b_aux + 0.5));
             }
     }
     win.draw(vertices);

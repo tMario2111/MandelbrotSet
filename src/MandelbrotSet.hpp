@@ -9,11 +9,19 @@
 #include <algorithm>
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <functional>
 #include <string>
 #include <thread>
 #include <vector>
 
 using f_type = double;
+
+enum ColorFunction
+{
+    Sin,
+    Cos,
+    Tan
+};
 
 class MandelbrotSet
 {
@@ -36,11 +44,22 @@ private:
     sf::VertexArray vertices;
     std::vector<unsigned int> points;
 
+    f_type r_modifier = 0.0;
+    ColorFunction r_func = ColorFunction::Sin;
+
+    f_type g_modifier = M_PI / 2;
+    ColorFunction g_func = ColorFunction::Sin;
+
+    f_type b_modifier = M_PI;
+    ColorFunction b_func = ColorFunction::Sin;
+
     bool needs_update = true;
     int max_iterations = 100;
     int thread_count = 1;
+    std::string screenshot_name = "screenshot";
 
     void gui();
+    void takeScreenshot();
     void control();
     void fractal(unsigned int c_thread);
 };
