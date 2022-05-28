@@ -13,6 +13,8 @@ C:/Program Files/CMake/share/cmake-3.23/Modules/CMakeSystemSpecificInitialize.cm
 C:/Program Files/CMake/share/cmake-3.23/Modules/Compiler/CMakeCommonCompilerMacros.cmake
 C:/Program Files/CMake/share/cmake-3.23/Modules/Compiler/MSVC-C.cmake
 C:/Program Files/CMake/share/cmake-3.23/Modules/Compiler/MSVC-CXX.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/FindPackageMessage.cmake
 C:/Program Files/CMake/share/cmake-3.23/Modules/Platform/Windows-MSVC-C.cmake
 C:/Program Files/CMake/share/cmake-3.23/Modules/Platform/Windows-MSVC-CXX.cmake
 C:/Program Files/CMake/share/cmake-3.23/Modules/Platform/Windows-MSVC.cmake
@@ -30,6 +32,9 @@ C:/dev/vcpkg/installed/x86-windows/share/imgui/imgui-config.cmake
 C:/dev/vcpkg/installed/x86-windows/share/imgui/imgui-targets-debug.cmake
 C:/dev/vcpkg/installed/x86-windows/share/imgui/imgui-targets-release.cmake
 C:/dev/vcpkg/installed/x86-windows/share/imgui/imgui-targets.cmake
+C:/dev/vcpkg/installed/x86-windows/share/nlohmann_json/nlohmann_jsonConfig.cmake
+C:/dev/vcpkg/installed/x86-windows/share/nlohmann_json/nlohmann_jsonConfigVersion.cmake
+C:/dev/vcpkg/installed/x86-windows/share/nlohmann_json/nlohmann_jsonTargets.cmake
 C:/dev/vcpkg/installed/x86-windows/share/sfml/SFMLConfig.cmake
 C:/dev/vcpkg/installed/x86-windows/share/sfml/SFMLConfigDependencies.cmake
 C:/dev/vcpkg/installed/x86-windows/share/sfml/SFMLConfigVersion.cmake

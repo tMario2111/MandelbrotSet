@@ -1,2 +1,2 @@
 PlatformToolSet=v143:VCToolArchitecture=Native64Bit:VCToolsVersion=14.31.31103:TargetPlatformVersion=10.0.20348.0:VcpkgTriplet=x86-windows:
-release|win32|C:\dev\VSCode projects\c++\MandelbrotSet\build\|
+Release|win32|C:\dev\VSCode projects\c++\MandelbrotSet\build\|

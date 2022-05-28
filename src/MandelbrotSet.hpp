@@ -3,13 +3,14 @@
 #include "Input.hpp"
 
 #include <SFML/Graphics.hpp>
-
 #include <imgui.h>
+#include <nlohmann/json.hpp>
 
 #include <algorithm>
 #define _USE_MATH_DEFINES
 #include <cmath>
-#include <functional>
+#include <fstream>
+#include <iomanip>
 #include <string>
 #include <thread>
 #include <vector>
@@ -41,6 +42,9 @@ private:
     const f_type default_domain_y_1 = -1.12;
     const f_type default_domain_y_s = 2.24;
 
+    f_type domain_x_1, domain_x_s;
+    f_type domain_y_1, domain_y_s;
+
     sf::VertexArray vertices;
     std::vector<unsigned int> points;
 
@@ -56,7 +60,7 @@ private:
     bool needs_update = true;
     int max_iterations = 100;
     int thread_count = 1;
-    std::string screenshot_name = "screenshot";
+    char screenshot_name[101] = "screenshot";
 
     void gui();
     void takeScreenshot();

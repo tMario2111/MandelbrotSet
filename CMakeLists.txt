@@ -4,14 +4,16 @@ project(MandelbrotSet)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(MandelbrotSet main.cpp 
-src/App.cpp src/App.hpp 
-src/MandelbrotSet.cpp src/MandelbrotSet.hpp 
-src/Input.cpp src/Input.hpp)
+    src/App.cpp src/App.hpp 
+    src/MandelbrotSet.cpp src/MandelbrotSet.hpp 
+    src/Input.cpp src/Input.hpp)
 
 find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 find_package(ImGui-SFML CONFIG REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
 
 target_link_libraries(MandelbrotSet PRIVATE 
-sfml-system sfml-network sfml-graphics sfml-window
-imgui::imgui ImGui-SFML::ImGui-SFML)
+    sfml-system sfml-network sfml-graphics sfml-window
+    imgui::imgui ImGui-SFML::ImGui-SFML
+    nlohmann_json nlohmann_json::nlohmann_json)

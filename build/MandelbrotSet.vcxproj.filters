@@ -29,6 +29,9 @@
     <CustomBuild Include="C:\dev\VSCode projects\c++\MandelbrotSet\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Natvis Include="C:\dev\vcpkg\installed\x86-windows\share\nlohmann_json\nlohmann_json.natvis" />
+  </ItemGroup>
+  <ItemGroup>
     <Filter Include="Header Files">
       <UniqueIdentifier>{A3154264-15FF-377D-A23A-BA5071BC35D2}</UniqueIdentifier>
     </Filter>

@@ -255,6 +255,9 @@ _VCPKG_INSTALLED_DIR:PATH=C:/dev/vcpkg/installed
 //The directory containing a CMake configuration file for imgui.
 imgui_DIR:PATH=C:/dev/vcpkg/installed/x86-windows/share/imgui
 
+//The directory containing a CMake configuration file for nlohmann_json.
+nlohmann_json_DIR:PATH=C:/dev/vcpkg/installed/x86-windows/share/nlohmann_json
+
 
 ########################
 # INTERNAL cache entries
@@ -386,6 +389,8 @@ CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 CMAKE_TOOLCHAIN_FILE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//Details about finding nlohmann_json
+FIND_PACKAGE_MESSAGE_DETAILS_nlohmann_json:INTERNAL=[C:/dev/vcpkg/installed/x86-windows/share/nlohmann_json/nlohmann_jsonConfig.cmake][v3.10.5()]
 //Install the dependencies listed in your manifest:
 //\n    If this is off, you will have to manually install your dependencies.
 //\n    See https://github.com/microsoft/vcpkg/tree/master/docs/specifications/manifests.md
