@@ -36,6 +36,11 @@ sf::Vector2<f_type> MandelbrotSet::getCursorPosition()
     return view_pos;
 }
 
+f_type MandelbrotSet::getZoom()
+{
+    return static_cast<f_type>(win.getSize().x) / view.width;
+}
+
 void MandelbrotSet::onResize()
 {
     needs_update = true;
@@ -62,6 +67,7 @@ void MandelbrotSet::gui()
     ImGui::Begin("SETTINGS");
 
     mandelbrot_coords = mapWinCoordsToMandelbrot(getCursorPosition());
+    zoom = getZoom();
     if (ImGui::InputDouble("x", &mandelbrot_coords.x, 0.0, 0.0, "%.16f", ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
     {
         const auto coord = mapMandelbrotCoordsToWin(mandelbrot_coords);
@@ -73,6 +79,16 @@ void MandelbrotSet::gui()
     {
         const auto coord = mapMandelbrotCoordsToWin(mandelbrot_coords);
         view.top = coord.y - view.height / 2.0;
+        needs_update = true;
+    }
+
+    if (ImGui::InputDouble("zoom", &zoom, 0.0, 0.0, "%.2f", ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
+    {
+        const auto center = sf::Vector2<f_type>{ view.left + view.width / 2.0, view.top + view.height / 2.0 };
+        view.width = static_cast<f_type>(win.getSize().x) / zoom;
+        view.height = static_cast<f_type>(win.getSize().y) / zoom;
+        view.left = center.x - view.width / 2.0;
+        view.top = center.y - view.height / 2.0;
         needs_update = true;
     }
 
@@ -133,8 +149,7 @@ void MandelbrotSet::takeScreenshot()
     nlohmann::json json{};
     json["x"] = (lt.x + rb.x) / 2.0;
     json["y"] = (lt.y + rb.y) / 2.0;
-    json["width"] = rb.x - lt.x;
-    json["height"] = rb.y - lt.y;
+    json["zoom"] = zoom;
 
     std::ofstream file{ name + ".json" };
     file << std::setw(4) << json;
@@ -145,7 +160,7 @@ void MandelbrotSet::control()
 {
     if (ImGui::GetIO().WantCaptureKeyboard)
         return;
-    if (input.isKeyPressed(sf::Keyboard::Add))
+    if (input.isKeyPressed(sf::Keyboard::Add) || input.isKeyPressed(sf::Keyboard::E))
     {
         view.left += view.width / 4.0;
         view.top += view.height / 4.0;
@@ -153,7 +168,7 @@ void MandelbrotSet::control()
         view.height /= 2.0;
         needs_update = true;
     }
-    else if (input.isKeyPressed(sf::Keyboard::Subtract))
+    else if (input.isKeyPressed(sf::Keyboard::Subtract) || input.isKeyPressed(sf::Keyboard::Q))
     {
         view.left -= view.width / 2.0;
         view.top -= view.height / 2.0;

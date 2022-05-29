@@ -49,6 +49,7 @@ private:
     std::vector<unsigned int> points;
 
     sf::Vector2<f_type> mandelbrot_coords;
+    f_type zoom;
 
     f_type r_modifier = 0.0;
     ColorFunction r_func = ColorFunction::Sin;
@@ -67,6 +68,7 @@ private:
     sf::Vector2<f_type> mapWinCoordsToMandelbrot(sf::Vector2<f_type> a);
     sf::Vector2<f_type> mapMandelbrotCoordsToWin(sf::Vector2<f_type> a);
     sf::Vector2<f_type> getCursorPosition();
+    f_type getZoom();
     void gui();
     void takeScreenshot();
     void control();
