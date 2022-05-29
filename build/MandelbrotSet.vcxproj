@@ -126,7 +126,7 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>C:\dev\vcpkg\installed\x86-windows\debug\lib\sfml-network-d.lib;C:\dev\vcpkg\installed\x86-windows\debug\lib\imguid.lib;C:\dev\vcpkg\installed\x86-windows\debug\lib\ImGui-SFML.lib;C:\dev\vcpkg\installed\x86-windows\debug\lib\sfml-graphics-d.lib;C:\dev\vcpkg\installed\x86-windows\debug\lib\sfml-window-d.lib;C:\dev\vcpkg\installed\x86-windows\debug\lib\sfml-system-d.lib;C:\dev\vcpkg\installed\x86-windows\debug\lib\imguid.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>C:\dev\vcpkg\installed\x86-windows\debug\lib\manual-link\sfml-main-d.lib;C:\dev\vcpkg\installed\x86-windows\debug\lib\sfml-network-d.lib;C:\dev\vcpkg\installed\x86-windows\debug\lib\imguid.lib;C:\dev\vcpkg\installed\x86-windows\debug\lib\ImGui-SFML.lib;C:\dev\vcpkg\installed\x86-windows\debug\lib\sfml-graphics-d.lib;C:\dev\vcpkg\installed\x86-windows\debug\lib\sfml-window-d.lib;C:\dev\vcpkg\installed\x86-windows\debug\lib\sfml-system-d.lib;C:\dev\vcpkg\installed\x86-windows\debug\lib\imguid.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -180,7 +180,7 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>C:\dev\vcpkg\installed\x86-windows\lib\sfml-network.lib;C:\dev\vcpkg\installed\x86-windows\lib\imgui.lib;C:\dev\vcpkg\installed\x86-windows\lib\ImGui-SFML.lib;C:\dev\vcpkg\installed\x86-windows\lib\sfml-graphics.lib;C:\dev\vcpkg\installed\x86-windows\lib\sfml-window.lib;C:\dev\vcpkg\installed\x86-windows\lib\sfml-system.lib;C:\dev\vcpkg\installed\x86-windows\lib\imgui.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>C:\dev\vcpkg\installed\x86-windows\lib\manual-link\sfml-main.lib;C:\dev\vcpkg\installed\x86-windows\lib\sfml-network.lib;C:\dev\vcpkg\installed\x86-windows\lib\imgui.lib;C:\dev\vcpkg\installed\x86-windows\lib\ImGui-SFML.lib;C:\dev\vcpkg\installed\x86-windows\lib\sfml-graphics.lib;C:\dev\vcpkg\installed\x86-windows\lib\sfml-window.lib;C:\dev\vcpkg\installed\x86-windows\lib\sfml-system.lib;C:\dev\vcpkg\installed\x86-windows\lib\imgui.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -234,7 +234,7 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>C:\dev\vcpkg\installed\x86-windows\lib\sfml-network.lib;C:\dev\vcpkg\installed\x86-windows\lib\imgui.lib;C:\dev\vcpkg\installed\x86-windows\lib\ImGui-SFML.lib;C:\dev\vcpkg\installed\x86-windows\lib\sfml-graphics.lib;C:\dev\vcpkg\installed\x86-windows\lib\sfml-window.lib;C:\dev\vcpkg\installed\x86-windows\lib\sfml-system.lib;C:\dev\vcpkg\installed\x86-windows\lib\imgui.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>C:\dev\vcpkg\installed\x86-windows\lib\manual-link\sfml-main.lib;C:\dev\vcpkg\installed\x86-windows\lib\sfml-network.lib;C:\dev\vcpkg\installed\x86-windows\lib\imgui.lib;C:\dev\vcpkg\installed\x86-windows\lib\ImGui-SFML.lib;C:\dev\vcpkg\installed\x86-windows\lib\sfml-graphics.lib;C:\dev\vcpkg\installed\x86-windows\lib\sfml-window.lib;C:\dev\vcpkg\installed\x86-windows\lib\sfml-system.lib;C:\dev\vcpkg\installed\x86-windows\lib\imgui.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -287,7 +287,7 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>C:\dev\vcpkg\installed\x86-windows\lib\sfml-network.lib;C:\dev\vcpkg\installed\x86-windows\lib\imgui.lib;C:\dev\vcpkg\installed\x86-windows\lib\ImGui-SFML.lib;C:\dev\vcpkg\installed\x86-windows\lib\sfml-graphics.lib;C:\dev\vcpkg\installed\x86-windows\lib\sfml-window.lib;C:\dev\vcpkg\installed\x86-windows\lib\sfml-system.lib;C:\dev\vcpkg\installed\x86-windows\lib\imgui.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>C:\dev\vcpkg\installed\x86-windows\lib\manual-link\sfml-main.lib;C:\dev\vcpkg\installed\x86-windows\lib\sfml-network.lib;C:\dev\vcpkg\installed\x86-windows\lib\imgui.lib;C:\dev\vcpkg\installed\x86-windows\lib\ImGui-SFML.lib;C:\dev\vcpkg\installed\x86-windows\lib\sfml-graphics.lib;C:\dev\vcpkg\installed\x86-windows\lib\sfml-window.lib;C:\dev\vcpkg\installed\x86-windows\lib\sfml-system.lib;C:\dev\vcpkg\installed\x86-windows\lib\imgui.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>

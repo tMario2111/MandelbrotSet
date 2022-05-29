@@ -48,6 +48,8 @@ private:
     sf::VertexArray vertices;
     std::vector<unsigned int> points;
 
+    sf::Vector2<f_type> mandelbrot_coords;
+
     f_type r_modifier = 0.0;
     ColorFunction r_func = ColorFunction::Sin;
 
@@ -62,6 +64,9 @@ private:
     int thread_count = 1;
     char screenshot_name[101] = "screenshot";
 
+    sf::Vector2<f_type> mapWinCoordsToMandelbrot(sf::Vector2<f_type> a);
+    sf::Vector2<f_type> mapMandelbrotCoordsToWin(sf::Vector2<f_type> a);
+    sf::Vector2<f_type> getCursorPosition();
     void gui();
     void takeScreenshot();
     void control();
