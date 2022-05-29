@@ -19,8 +19,8 @@ sf::Vector2<f_type> MandelbrotSet::mapWinCoordsToMandelbrot(sf::Vector2<f_type> 
 sf::Vector2<f_type> MandelbrotSet::mapMandelbrotCoordsToWin(sf::Vector2<f_type> a)
 {
     sf::Vector2<f_type> b{};
-    b.x = (a.x - domain_x_s) * static_cast<f_type>(win.getSize().x) / domain_x_s;
-    b.y = (a.y - domain_y_s) * static_cast<f_type>(win.getSize().y) / domain_y_s;
+    b.x = (a.x - domain_x_1) * static_cast<f_type>(win.getSize().x) / domain_x_s;
+    b.y = (a.y - domain_y_1) * static_cast<f_type>(win.getSize().y) / domain_y_s;
     return b;
 }
 
@@ -61,8 +61,20 @@ void MandelbrotSet::gui()
     const char* functions[] = { "sin", "cos", "tan" };
     ImGui::Begin("SETTINGS");
 
-    ImGui::InputDouble("x", &mandelbrot_coords.x, 0.0, 0.0, "%.16f");
-    ImGui::InputDouble("y", &mandelbrot_coords.y, 0.0, 0.0, "%.16f");
+    mandelbrot_coords = mapWinCoordsToMandelbrot(getCursorPosition());
+    if (ImGui::InputDouble("x", &mandelbrot_coords.x, 0.0, 0.0, "%.16f", ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
+    {
+        const auto coord = mapMandelbrotCoordsToWin(mandelbrot_coords);
+        view.left = coord.x - view.width / 2.0;
+        needs_update = true;
+    }
+
+    if (ImGui::InputDouble("y", &mandelbrot_coords.y, 0.0, 0.0, "%.16f", ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
+    {
+        const auto coord = mapMandelbrotCoordsToWin(mandelbrot_coords);
+        view.top = coord.y - view.height / 2.0;
+        needs_update = true;
+    }
 
     spacing();
 
@@ -231,8 +243,6 @@ void MandelbrotSet::update()
 {
     gui();
     control();
-
-    mandelbrot_coords = mapWinCoordsToMandelbrot(getCursorPosition());
 
     if (!needs_update)
         return;
