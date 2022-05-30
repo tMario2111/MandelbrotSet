@@ -68,21 +68,24 @@ void MandelbrotSet::gui()
 
     mandelbrot_coords = mapWinCoordsToMandelbrot(getCursorPosition());
     zoom = getZoom();
-    if (ImGui::InputDouble("x", &mandelbrot_coords.x, 0.0, 0.0, "%.16f", ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
+    if (ImGui::InputDouble("x", &mandelbrot_coords.x, 0.0, 0.0, "%.16f", 
+        ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
     {
         const auto coord = mapMandelbrotCoordsToWin(mandelbrot_coords);
         view.left = coord.x - view.width / 2.0;
         needs_update = true;
     }
 
-    if (ImGui::InputDouble("y", &mandelbrot_coords.y, 0.0, 0.0, "%.16f", ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
+    if (ImGui::InputDouble("y", &mandelbrot_coords.y, 0.0, 0.0, "%.16f", 
+        ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
     {
         const auto coord = mapMandelbrotCoordsToWin(mandelbrot_coords);
         view.top = coord.y - view.height / 2.0;
         needs_update = true;
     }
 
-    if (ImGui::InputDouble("zoom", &zoom, 0.0, 0.0, "%.2f", ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
+    if (ImGui::InputDouble("zoom", &zoom, 0.0, 0.0, "%.2f", 
+        ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
     {
         const auto center = sf::Vector2<f_type>{ view.left + view.width / 2.0, view.top + view.height / 2.0 };
         view.width = static_cast<f_type>(win.getSize().x) / zoom;
@@ -94,19 +97,22 @@ void MandelbrotSet::gui()
 
     spacing();
 
-    if (ImGui::InputDouble("Red modifier", &r_modifier) || 
+    if (ImGui::InputDouble("Red modifier", &r_modifier, 0.0, 0.0, "%.6f", 
+        ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue) || 
         ImGui::ListBox("Red function", reinterpret_cast<int*>(&r_func), functions, 3))
         needs_update = true;
 
     spacing();
 
-    if (ImGui::InputDouble("Green modifier", &g_modifier) || 
+    if (ImGui::InputDouble("Green modifier", &g_modifier, 0.0, 0.0, "%.6f", 
+        ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue) || 
         ImGui::ListBox("Green function", reinterpret_cast<int*>(&g_func), functions, 3))
         needs_update = true;
 
     spacing();
 
-    if (ImGui::InputDouble("Blue modifier", &b_modifier) || 
+    if (ImGui::InputDouble("Blue modifier", &b_modifier, 0.0, 0.0, "%.6f", 
+        ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue) || 
         ImGui::ListBox("Blue function", reinterpret_cast<int*>(&b_func), functions, 3))
         needs_update = true;
 
