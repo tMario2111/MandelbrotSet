@@ -4,10 +4,18 @@
     #include <Windows.h>
 #endif
 
+#include <iostream>
+
 int main()
 {
 #ifdef _WIN32
     ShowWindow(GetConsoleWindow(), SW_HIDE);
+#endif
+
+#ifdef NDEBUG
+    std::cout << "Release\n";
+#else 
+    std::cout << "Debug\n";
 #endif
 
     App app{};

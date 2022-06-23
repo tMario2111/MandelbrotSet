@@ -1,0 +1,55 @@
+Checks: 
+'-*,
+bugprone-*,
+cert-dcl21-cpp,
+cert-dcl50-cpp,
+cert-env33-c,
+cert-err34-c,
+cert-err52-cpp,
+cert-err60-cpp,
+cert-flp30-c,
+cert-msc50-cpp,
+cert-msc51-cpp,
+cppcoreguidelines-*,
+-cppcoreguidelines-macro-usage,
+-cppcoreguidelines-pro-type-reinterpret-cast,
+-cppcoreguidelines-pro-type-union-access,
+-cppcoreguidelines-pro-bounds-pointer-arithmetic,
+-cppcoreguidelines-pro-type-vararg,
+google-build-using-namespace,
+google-explicit-constructor,
+google-global-names-in-headers,
+google-readability-casting,
+google-runtime-operator,
+hicpp-*,
+-hicpp-vararg,
+misc-*,
+modernize-*,
+performance-*,
+readability-*,
+-readability-named-parameter,
+-modernize-use-trailing-return-type,
+-readability-identifier-length,
+-readability-braces-around-statements,
+-hicpp-braces-around-statements,
+-hicpp-special-member-functions,
+-cppcoreguidelines-special-member-functions,
+-readability-uppercase-literal-suffix,
+-hicpp-uppercase-literal-suffix,
+-readability-uppercase-literal-suffix,
+-cppcoreguidelines-pro-type-member-init,
+-hicpp-member-init,
+-cppcoreguidelines-non-private-member-variables-in-classes,
+-misc-non-private-member-variables-in-classes,
+-cppcoreguidelines-avoid-magic-numbers,
+-readability-isolate-declaration,
+-readability-magic-numbers'
+
+CheckOptions:
+    - key: bugprone-argument-comment.StrictMode
+      value: 1
+    - key: bugprone-exception-escape.FunctionsThatShouldNotThrow
+      value: WinMain,SDL_main
+    - key: misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
+      value: 1
+FormatStyle: 'file'

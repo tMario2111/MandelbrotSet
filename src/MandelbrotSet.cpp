@@ -227,14 +227,16 @@ void MandelbrotSet::fractal(unsigned int c_thread)
     auto left = view.left + c_thread * (view.width / thread_count);
     auto top = view.top;
 
-    unsigned int iterations;
-    f_type x, y;
-    f_type x0, y0;
-    f_type x2, y2;
+    unsigned int iterations{};
+    f_type x{};
+    f_type y{};
+    f_type x0{};
+    f_type y0{};
+    f_type x2{};
+    f_type y2{};
 
-    const f_type a = 0.0;
-
-    unsigned int i, j;
+    unsigned int i{};
+    unsigned int j{};
     for (i = c_thread * column_lenght; i < (c_thread + 1) * column_lenght; i++)
     {
         top = view.top;
@@ -281,10 +283,11 @@ void MandelbrotSet::update()
 void MandelbrotSet::render()
 {
     const auto a = 0.1f;
-    unsigned int k;
-    f_type it;
-    unsigned int i, j;
-    f_type r_aux, g_aux, b_aux;
+    unsigned int k{};
+    f_type it{};
+    unsigned int i{};
+    unsigned int j{};
+    f_type r_aux{}, g_aux{}, b_aux{};
     if (needs_update)
     {
         needs_update = false;
