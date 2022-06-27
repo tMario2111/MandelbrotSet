@@ -1,0 +1,16 @@
+{
+    "_comment": "sin = 0, cos = 1, tan = 2",
+    
+    "red": {
+        "modifier": 0.0,
+        "function": 0
+    },
+    "green": {
+        "modifier": 1.57079,
+        "function": 0
+    },
+    "blue": {
+        "modifier": 3.14159,
+        "function": 0
+    }
+}

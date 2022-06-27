@@ -7,10 +7,12 @@
 #include <nlohmann/json.hpp>
 
 #include <algorithm>
-#define _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES // TODO: Remove
 #include <cmath>
+#include <filesystem>
 #include <fstream>
 #include <iomanip>
+#include <memory>
 #include <string>
 #include <thread>
 #include <vector>
@@ -51,14 +53,21 @@ private:
     sf::Vector2<f_type> mandelbrot_coords;
     f_type zoom;
 
-    f_type r_modifier = 0.0;
-    ColorFunction r_func = ColorFunction::Sin;
+    struct Theme
+    {
+        std::string name;
 
-    f_type g_modifier = M_PI / 2;
-    ColorFunction g_func = ColorFunction::Sin;
+        f_type r_modifier;
+        ColorFunction r_func;
 
-    f_type b_modifier = M_PI;
-    ColorFunction b_func = ColorFunction::Sin;
+        f_type g_modifier;
+        ColorFunction g_func;
+
+        f_type b_modifier;
+        ColorFunction b_func;
+    };
+    std::vector<std::unique_ptr<Theme>> themes;
+    Theme* selected_theme = nullptr;
 
     bool needs_update = true;
     int max_iterations = 100;
@@ -69,6 +78,8 @@ private:
     sf::Vector2<f_type> mapMandelbrotCoordsToWin(sf::Vector2<f_type> a);
     sf::Vector2<f_type> getCursorPosition();
     f_type getZoom();
+
+    void loadThemes();
     void gui();
     void takeScreenshot();
     void control();

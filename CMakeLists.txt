@@ -13,7 +13,7 @@ find_package(imgui CONFIG REQUIRED)
 find_package(ImGui-SFML CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 
-target_link_libraries(MandelbrotSet PRIVATE 
+target_link_libraries(MandelbrotSet PRIVATE -static
     sfml-main sfml-system sfml-network sfml-graphics sfml-window
     imgui::imgui ImGui-SFML::ImGui-SFML
     nlohmann_json nlohmann_json::nlohmann_json)

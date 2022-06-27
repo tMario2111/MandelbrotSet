@@ -1,10 +1,12 @@
 #include "MandelbrotSet.hpp"
+#include <imgui.h>
 
 MandelbrotSet::MandelbrotSet(sf::RenderWindow& win, Input& input) :
     win{ win },
     input{ input },
     vertices{ sf::PrimitiveType::Points }
 {
+    loadThemes();
     onResize();
 }
 
@@ -40,12 +42,63 @@ f_type MandelbrotSet::getZoom()
 {
     return static_cast<f_type>(win.getSize().x) / view.width;
 }
+#include <iostream> // TODO: REMOVE
+void MandelbrotSet::loadThemes()
+{
+    std::string default_theme{};
+    {
+        std::ifstream file{ "themes/default_theme.json" };
+        nlohmann::json json{};
+        file >> json;
+        default_theme = json["theme"];
+        file.close();
+    }
+
+    for (const auto& entry : std::filesystem::directory_iterator("themes"))
+    {
+        if (!std::filesystem::is_regular_file(entry) || 
+            entry.path().extension().string() != ".json" ||
+            entry.path().filename().string() == "default_theme.json")
+            continue;
+
+        nlohmann::json json{};
+        {
+            std::ifstream file{ entry.path().string() };
+            file >> json;
+            file.close();
+        }
+
+        auto theme = std::make_unique<Theme>();
+        
+        const auto filename = entry.path().filename().string();
+        theme->name = filename.substr(0, filename.find_last_of('.')); // Remove extension
+
+        theme->r_modifier = static_cast<f_type>(json["red"]["modifier"]);
+        theme->r_func = static_cast<ColorFunction>(json["red"]["function"]);
+
+        theme->g_modifier = static_cast<f_type>(json["green"]["modifier"]);
+        theme->g_func = static_cast<ColorFunction>(json["green"]["function"]);
+
+        theme->b_modifier = static_cast<f_type>(json["blue"]["modifier"]);
+        theme->b_func = static_cast<ColorFunction>(json["blue"]["function"]);
+
+        themes.push_back(std::move(theme));
+
+        if (themes.back()->name == default_theme)
+            selected_theme = themes.back().get();
+    }
+    if (selected_theme == nullptr)
+    {
+        std::cerr << "Could not load default theme, aborting";
+        exit(-1);
+    }
+}
 
 void MandelbrotSet::onResize()
 {
     needs_update = true;
 
-    points.resize(win.getSize().x * win.getSize().y);
+    points.resize(static_cast<std::vector<unsigned int>::size_type>(win.getSize().x) * win.getSize().y);
     vertices.resize(points.size());
 
     view.left = static_cast<f_type>(win.getView().getCenter().x - win.getView().getSize().x / 2);
@@ -66,72 +119,85 @@ void MandelbrotSet::gui()
     const char* functions[] = { "sin", "cos", "tan" };
     ImGui::Begin("SETTINGS");
 
-    mandelbrot_coords = mapWinCoordsToMandelbrot(getCursorPosition());
-    zoom = getZoom();
-    if (ImGui::InputDouble("x", &mandelbrot_coords.x, 0.0, 0.0, "%.16f", 
-        ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
+    ImGui::BeginTabBar("tabBar");
+
+    if (ImGui::BeginTabItem("CONTROL"))
     {
-        const auto coord = mapMandelbrotCoordsToWin(mandelbrot_coords);
-        view.left = coord.x - view.width / 2.0;
-        needs_update = true;
+        mandelbrot_coords = mapWinCoordsToMandelbrot(getCursorPosition());
+        zoom = getZoom();
+        if (ImGui::InputDouble("x", &mandelbrot_coords.x, 0.0, 0.0, "%.16f", 
+            ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
+        {
+            const auto coord = mapMandelbrotCoordsToWin(mandelbrot_coords);
+            view.left = coord.x - view.width / 2.0;
+            needs_update = true;
+        }
+
+        if (ImGui::InputDouble("y", &mandelbrot_coords.y, 0.0, 0.0, "%.16f", 
+            ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
+        {
+            const auto coord = mapMandelbrotCoordsToWin(mandelbrot_coords);
+            view.top = coord.y - view.height / 2.0;
+            needs_update = true;
+        }
+
+        if (ImGui::InputDouble("zoom", &zoom, 0.0, 0.0, "%.2f", 
+            ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
+        {
+            const auto center = sf::Vector2<f_type>{ view.left + view.width / 2.0, view.top + view.height / 2.0 };
+            view.width = static_cast<f_type>(win.getSize().x) / zoom;
+            view.height = static_cast<f_type>(win.getSize().y) / zoom;
+            view.left = center.x - view.width / 2.0;
+            view.top = center.y - view.height / 2.0;
+            needs_update = true;
+        }
+
+        spacing();
+
+        if (ImGui::SliderInt("Iterations", &max_iterations, 100, 1000))
+            needs_update = true;
+
+        spacing();
+
+        ImGui::SliderInt("Threads", &thread_count, 1, 32);
+
+        spacing();
+
+        ImGui::EndTabItem();
+    }
+    if (ImGui::BeginTabItem("THEME"))
+    {
+        if (ImGui::InputDouble("Red modifier", &selected_theme->r_modifier, 0.0, 0.0, "%.6f", 
+        ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue) || 
+            ImGui::ListBox("Red function", reinterpret_cast<int*>(&selected_theme->r_func), functions, 3))
+            needs_update = true;
+
+        spacing();
+
+        if (ImGui::InputDouble("Green modifier", &selected_theme->g_modifier, 0.0, 0.0, "%.6f", 
+        ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue) || 
+            ImGui::ListBox("Green function", reinterpret_cast<int*>(&selected_theme->g_func), functions, 3))
+            needs_update = true;
+
+        spacing();
+
+        if (ImGui::InputDouble("Blue modifier", &selected_theme->b_modifier, 0.0, 0.0, "%.6f", 
+        ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue) || 
+            ImGui::ListBox("Blue function", reinterpret_cast<int*>(&selected_theme->b_func), functions, 3))
+            needs_update = true;
+
+        ImGui::EndTabItem();
+    }
+    if (ImGui::BeginTabItem("SCREENSHOT"))
+    {
+        ImGui::InputText("Filename", screenshot_name, 100);
+        if (ImGui::Button("Save"))
+            takeScreenshot();
+
+        ImGui::EndTabItem();
     }
 
-    if (ImGui::InputDouble("y", &mandelbrot_coords.y, 0.0, 0.0, "%.16f", 
-        ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
-    {
-        const auto coord = mapMandelbrotCoordsToWin(mandelbrot_coords);
-        view.top = coord.y - view.height / 2.0;
-        needs_update = true;
-    }
-
-    if (ImGui::InputDouble("zoom", &zoom, 0.0, 0.0, "%.2f", 
-        ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
-    {
-        const auto center = sf::Vector2<f_type>{ view.left + view.width / 2.0, view.top + view.height / 2.0 };
-        view.width = static_cast<f_type>(win.getSize().x) / zoom;
-        view.height = static_cast<f_type>(win.getSize().y) / zoom;
-        view.left = center.x - view.width / 2.0;
-        view.top = center.y - view.height / 2.0;
-        needs_update = true;
-    }
-
-    spacing();
-
-    if (ImGui::InputDouble("Red modifier", &r_modifier, 0.0, 0.0, "%.6f", 
-        ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue) || 
-        ImGui::ListBox("Red function", reinterpret_cast<int*>(&r_func), functions, 3))
-        needs_update = true;
-
-    spacing();
-
-    if (ImGui::InputDouble("Green modifier", &g_modifier, 0.0, 0.0, "%.6f", 
-        ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue) || 
-        ImGui::ListBox("Green function", reinterpret_cast<int*>(&g_func), functions, 3))
-        needs_update = true;
-
-    spacing();
-
-    if (ImGui::InputDouble("Blue modifier", &b_modifier, 0.0, 0.0, "%.6f", 
-        ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue) || 
-        ImGui::ListBox("Blue function", reinterpret_cast<int*>(&b_func), functions, 3))
-        needs_update = true;
-
-    spacing();
-
-    if (ImGui::SliderInt("Iterations", &max_iterations, 100, 1000))
-        needs_update = true;
-
-    spacing();
-
-    ImGui::SliderInt("Threads", &thread_count, 1, 32);
-
-    spacing();
-
-    ImGui::InputText("Filename", screenshot_name, 100);
-    ImGui::SameLine();
-    if (ImGui::Button("Save"))
-        takeScreenshot();
-
+    ImGui::EndTabBar();
     ImGui::End();
 }
 
@@ -228,15 +294,11 @@ void MandelbrotSet::fractal(unsigned int c_thread)
     auto top = view.top;
 
     unsigned int iterations{};
-    f_type x{};
-    f_type y{};
-    f_type x0{};
-    f_type y0{};
-    f_type x2{};
-    f_type y2{};
+    f_type x, y;
+    f_type x0, y0;
+    f_type x2, y2;
 
-    unsigned int i{};
-    unsigned int j{};
+    unsigned int i, j;
     for (i = c_thread * column_lenght; i < (c_thread + 1) * column_lenght; i++)
     {
         top = view.top;
@@ -283,11 +345,10 @@ void MandelbrotSet::update()
 void MandelbrotSet::render()
 {
     const auto a = 0.1f;
-    unsigned int k{};
-    f_type it{};
-    unsigned int i{};
-    unsigned int j{};
-    f_type r_aux{}, g_aux{}, b_aux{};
+    unsigned int k;
+    f_type it;
+    unsigned int i, j;
+    f_type r_aux, g_aux, b_aux;
     if (needs_update)
     {
         needs_update = false;
@@ -297,26 +358,26 @@ void MandelbrotSet::render()
                 k = i * win.getSize().y + j;
                 it = static_cast<f_type>(points[k]);
 
-                if (r_func == ColorFunction::Sin)
-                    r_aux = 0.5 * sin(it * a + r_modifier);
-                else if (r_func == ColorFunction::Cos)
-                    r_aux = 0.5 * cos(it * a + r_modifier);
+                if (selected_theme->r_func == ColorFunction::Sin)
+                    r_aux = 0.5 * sin(it * a + selected_theme->r_modifier);
+                else if (selected_theme->r_func == ColorFunction::Cos)
+                    r_aux = 0.5 * cos(it * a + selected_theme->r_modifier);
                 else 
-                    r_aux = 0.5 * tan(it * a + r_modifier); 
+                    r_aux = 0.5 * tan(it * a + selected_theme->r_modifier); 
 
-                if (g_func == ColorFunction::Sin)
-                    g_aux = 0.5 * sin(it * a + g_modifier);
-                else if (g_func == ColorFunction::Cos)
-                    g_aux = 0.5 * cos(it * a + g_modifier);
+                if (selected_theme->g_func == ColorFunction::Sin)
+                    g_aux = 0.5 * sin(it * a + selected_theme->g_modifier);
+                else if (selected_theme->g_func == ColorFunction::Cos)
+                    g_aux = 0.5 * cos(it * a + selected_theme->g_modifier);
                 else 
-                    g_aux = 0.5 * tan(it * a + g_modifier); 
+                    g_aux = 0.5 * tan(it * a + selected_theme->g_modifier); 
 
-                if (b_func == ColorFunction::Sin)
-                    b_aux = 0.5 * sin(it * a + b_modifier);
-                else if (r_func == ColorFunction::Cos)
-                    b_aux = 0.5 * cos(it * a + b_modifier);
+                if (selected_theme->b_func == ColorFunction::Sin)
+                    b_aux = 0.5 * sin(it * a + selected_theme->b_modifier);
+                else if (selected_theme->b_func == ColorFunction::Cos)
+                    b_aux = 0.5 * cos(it * a + selected_theme->b_modifier);
                 else 
-                    b_aux = 0.5 * tan(it * a + b_modifier); 
+                    b_aux = 0.5 * tan(it * a + selected_theme->b_modifier); 
 
                 vertices[k].color.r = static_cast<sf::Uint8>(255.0 * (r_aux + 0.5));
                 vertices[k].color.g = static_cast<sf::Uint8>(255.0 * (g_aux + 0.5));
