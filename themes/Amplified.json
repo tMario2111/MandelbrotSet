@@ -1,0 +1,14 @@
+{
+    "red": {
+        "modifier": 0.0,
+        "function": 1 
+    },
+    "green": {
+        "modifier": 1.57079,
+        "function": 1
+    },
+    "blue": {
+        "modifier": 3.0,
+        "function": 1
+    }
+}

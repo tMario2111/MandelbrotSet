@@ -6,7 +6,6 @@ MandelbrotSet::MandelbrotSet(sf::RenderWindow& win, Input& input) :
     input{ input },
     vertices{ sf::PrimitiveType::Points }
 {
-    loadThemes();
     onResize();
 }
 
@@ -42,57 +41,6 @@ f_type MandelbrotSet::getZoom()
 {
     return static_cast<f_type>(win.getSize().x) / view.width;
 }
-#include <iostream> // TODO: REMOVE
-void MandelbrotSet::loadThemes()
-{
-    std::string default_theme{};
-    {
-        std::ifstream file{ "themes/default_theme.json" };
-        nlohmann::json json{};
-        file >> json;
-        default_theme = json["theme"];
-        file.close();
-    }
-
-    for (const auto& entry : std::filesystem::directory_iterator("themes"))
-    {
-        if (!std::filesystem::is_regular_file(entry) || 
-            entry.path().extension().string() != ".json" ||
-            entry.path().filename().string() == "default_theme.json")
-            continue;
-
-        nlohmann::json json{};
-        {
-            std::ifstream file{ entry.path().string() };
-            file >> json;
-            file.close();
-        }
-
-        auto theme = std::make_unique<Theme>();
-        
-        const auto filename = entry.path().filename().string();
-        theme->name = filename.substr(0, filename.find_last_of('.')); // Remove extension
-
-        theme->r_modifier = static_cast<f_type>(json["red"]["modifier"]);
-        theme->r_func = static_cast<ColorFunction>(json["red"]["function"]);
-
-        theme->g_modifier = static_cast<f_type>(json["green"]["modifier"]);
-        theme->g_func = static_cast<ColorFunction>(json["green"]["function"]);
-
-        theme->b_modifier = static_cast<f_type>(json["blue"]["modifier"]);
-        theme->b_func = static_cast<ColorFunction>(json["blue"]["function"]);
-
-        themes.push_back(std::move(theme));
-
-        if (themes.back()->name == default_theme)
-            selected_theme = themes.back().get();
-    }
-    if (selected_theme == nullptr)
-    {
-        std::cerr << "Could not load default theme, aborting";
-        exit(-1);
-    }
-}
 
 void MandelbrotSet::onResize()
 {
@@ -116,7 +64,7 @@ void MandelbrotSet::onResize()
 void MandelbrotSet::gui()
 {
     const auto spacing = []{ ImGui::Dummy(ImVec2{ 0.f, 10.f }); };
-    const char* functions[] = { "sin", "cos", "tan" };
+    
     ImGui::Begin("SETTINGS");
 
     ImGui::BeginTabBar("tabBar");
@@ -167,24 +115,7 @@ void MandelbrotSet::gui()
     }
     if (ImGui::BeginTabItem("THEME"))
     {
-        if (ImGui::InputDouble("Red modifier", &selected_theme->r_modifier, 0.0, 0.0, "%.6f", 
-        ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue) || 
-            ImGui::ListBox("Red function", reinterpret_cast<int*>(&selected_theme->r_func), functions, 3))
-            needs_update = true;
-
-        spacing();
-
-        if (ImGui::InputDouble("Green modifier", &selected_theme->g_modifier, 0.0, 0.0, "%.6f", 
-        ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue) || 
-            ImGui::ListBox("Green function", reinterpret_cast<int*>(&selected_theme->g_func), functions, 3))
-            needs_update = true;
-
-        spacing();
-
-        if (ImGui::InputDouble("Blue modifier", &selected_theme->b_modifier, 0.0, 0.0, "%.6f", 
-        ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue) || 
-            ImGui::ListBox("Blue function", reinterpret_cast<int*>(&selected_theme->b_func), functions, 3))
-            needs_update = true;
+        needs_update = themes.gui();
 
         ImGui::EndTabItem();
     }
@@ -349,6 +280,7 @@ void MandelbrotSet::render()
     f_type it;
     unsigned int i, j;
     f_type r_aux, g_aux, b_aux;
+    auto selected_theme = themes.getSelectedTheme();
     if (needs_update)
     {
         needs_update = false;

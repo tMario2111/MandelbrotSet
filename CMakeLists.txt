@@ -5,7 +5,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(MandelbrotSet main.cpp 
     src/App.cpp src/App.hpp 
-    src/MandelbrotSet.cpp src/MandelbrotSet.hpp 
+    src/MandelbrotSet.cpp src/MandelbrotSet.hpp
+    src/ThemeManager.hpp src/ThemeManager.cpp 
     src/Input.cpp src/Input.hpp)
 
 find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Input.hpp"
+#include "ThemeManager.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <imgui.h>
@@ -9,22 +10,14 @@
 #include <algorithm>
 #define _USE_MATH_DEFINES // TODO: Remove
 #include <cmath>
-#include <filesystem>
 #include <fstream>
 #include <iomanip>
-#include <memory>
+#include <iostream>
 #include <string>
 #include <thread>
 #include <vector>
 
 using f_type = double;
-
-enum ColorFunction
-{
-    Sin,
-    Cos,
-    Tan
-};
 
 class MandelbrotSet
 {
@@ -50,24 +43,10 @@ private:
     sf::VertexArray vertices;
     std::vector<unsigned int> points;
 
+    ThemeManager themes;
+
     sf::Vector2<f_type> mandelbrot_coords;
     f_type zoom;
-
-    struct Theme
-    {
-        std::string name;
-
-        f_type r_modifier;
-        ColorFunction r_func;
-
-        f_type g_modifier;
-        ColorFunction g_func;
-
-        f_type b_modifier;
-        ColorFunction b_func;
-    };
-    std::vector<std::unique_ptr<Theme>> themes;
-    Theme* selected_theme = nullptr;
 
     bool needs_update = true;
     int max_iterations = 100;
@@ -79,7 +58,6 @@ private:
     sf::Vector2<f_type> getCursorPosition();
     f_type getZoom();
 
-    void loadThemes();
     void gui();
     void takeScreenshot();
     void control();
