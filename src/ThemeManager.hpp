@@ -1,6 +1,7 @@
 #pragma once
 
 #include <imgui.h>
+#include <imgui_stdlib.h>
 #include <nlohmann/json.hpp>
 
 #include <algorithm>
@@ -44,8 +45,12 @@ public:
     bool gui();
 private:
     std::vector<std::unique_ptr<Theme>> themes;
-    Theme* selected_theme = nullptr;
     unsigned int selected_theme_index;
 
+    void copyThemeToJson(Theme* theme, nlohmann::json& json);
+    void writeThemeToFile(Theme* theme, const nlohmann::json& json);
     void loadThemes(); 
+    void saveNewTheme();
+    void deleteSelectedTheme();
+    void modifySelectedTheme();
 };

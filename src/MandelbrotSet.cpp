@@ -115,7 +115,7 @@ void MandelbrotSet::gui()
     }
     if (ImGui::BeginTabItem("THEME"))
     {
-        needs_update = themes.gui();
+        needs_update = themes.gui() ? true : needs_update;
 
         ImGui::EndTabItem();
     }

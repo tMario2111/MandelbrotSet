@@ -48,23 +48,66 @@ void ThemeManager::loadThemes()
         themes.push_back(std::move(theme));
 
         if (themes.back()->name == default_theme)
-        {
-            selected_theme = themes.back().get();
             selected_theme_index = i;
-        }
 
         i++;
-    }
-    if (selected_theme == nullptr)
-    {
-        std::cerr << "Could not load default theme, aborting";
-        exit(-1);
     }
 }
 
 Theme* ThemeManager::getSelectedTheme()
 {
-    return selected_theme;
+    return themes[selected_theme_index].get();
+}
+
+void ThemeManager::copyThemeToJson(Theme* theme, nlohmann::json& json)
+{
+    json["red"]["modifier"] = theme->r_modifier;
+    json["red"]["function"] = theme->r_func;
+
+    json["green"]["modifier"] = theme->g_modifier;
+    json["green"]["function"] = theme->g_func;
+
+    json["blue"]["modifier"] = theme->b_modifier;
+    json["blue"]["function"] = theme->b_func;
+}
+
+void ThemeManager::saveNewTheme()
+{
+    const auto selected_theme = themes[selected_theme_index].get();
+    
+    nlohmann::json json{};
+    copyThemeToJson(selected_theme, json);
+    writeThemeToFile(selected_theme, json);
+    themes.clear();
+    loadThemes();
+    selected_theme_index = 0;
+}
+
+void ThemeManager::deleteSelectedTheme()
+{
+    std::filesystem::remove("themes/" + themes[selected_theme_index]->name + ".json");
+    themes.erase(themes.begin() + selected_theme_index);
+    selected_theme_index = 0;
+}
+
+void ThemeManager::writeThemeToFile(Theme* theme, const nlohmann::json& json)
+{
+    std::ofstream file{"themes/" + theme->name + ".json"};
+    file << std::setw(4) << json;
+    file.close();
+}
+
+void ThemeManager::modifySelectedTheme()
+{
+    const auto selected_theme = themes[selected_theme_index].get();
+    nlohmann::json json{};
+    {
+        std::ifstream file{"themes/" + selected_theme->name + ".json"};
+        file >> json;
+        file.close();
+    }
+    copyThemeToJson(selected_theme, json);
+    writeThemeToFile(selected_theme, json);
 }
 
 bool ThemeManager::gui()
@@ -87,10 +130,41 @@ bool ThemeManager::gui()
         }
         ImGui::EndListBox();
     }
-    selected_theme = themes[selected_theme_index].get();
+
+    ImGui::InputText("Name", &themes[selected_theme_index]->name);
+
+    if (ImGui::Button("Save new"))
+    {
+        saveNewTheme();
+        needs_update = true;
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("Modify"))
+        modifySelectedTheme();
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("Delete"))
+    {
+        deleteSelectedTheme();
+        needs_update = true;
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("Reload"))
+    {
+        themes.clear();
+        loadThemes();
+        selected_theme_index = 0;
+        needs_update = true;
+    }
 
     spacing();
 
+    const auto selected_theme = themes[selected_theme_index].get();
     if (ImGui::InputDouble("Red modifier", &selected_theme->r_modifier, 0.0, 0.0, "%.6f", 
         ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue) || 
             ImGui::ListBox("Red function", reinterpret_cast<int*>(&selected_theme->r_func), functions, 3))
