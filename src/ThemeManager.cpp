@@ -7,16 +7,6 @@ ThemeManager::ThemeManager()
 
 void ThemeManager::loadThemes()
 {
-    std::string default_theme{};
-    {
-        std::ifstream file{ "themes/default_theme.json" };
-        nlohmann::json json{};
-        file >> json;
-        default_theme = json["theme"];
-        file.close();
-    }
-
-    unsigned int i = 0;
     for (const auto& entry : std::filesystem::directory_iterator("themes"))
     {
         if (!std::filesystem::is_regular_file(entry) || 
@@ -46,12 +36,8 @@ void ThemeManager::loadThemes()
         theme->b_func = static_cast<ColorFunction>(json["blue"]["function"]);
 
         themes.push_back(std::move(theme));
-
-        if (themes.back()->name == default_theme)
-            selected_theme_index = i;
-
-        i++;
     }
+    selected_theme_index = 0;
 }
 
 Theme* ThemeManager::getSelectedTheme()
