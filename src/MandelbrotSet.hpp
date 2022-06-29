@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Input.hpp"
+#include "LocationManager.hpp"
 #include "ThemeManager.hpp"
 
 #include <SFML/Graphics.hpp>
@@ -8,11 +9,11 @@
 #include <nlohmann/json.hpp>
 
 #include <algorithm>
-#define _USE_MATH_DEFINES // TODO: Remove
 #include <cmath>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <optional>
 #include <string>
 #include <thread>
 #include <vector>
@@ -44,6 +45,7 @@ private:
     std::vector<unsigned int> points;
 
     ThemeManager themes;
+    LocationManager locations;
 
     sf::Vector2<f_type> mandelbrot_coords;
     f_type zoom;
@@ -57,6 +59,7 @@ private:
     sf::Vector2<f_type> mapMandelbrotCoordsToWin(sf::Vector2<f_type> a);
     sf::Vector2<f_type> getCursorPosition();
     f_type getZoom();
+    void setLocation(const Location location);
 
     void gui();
     void takeScreenshot();

@@ -42,6 +42,21 @@ f_type MandelbrotSet::getZoom()
     return static_cast<f_type>(win.getSize().x) / view.width;
 }
 
+void MandelbrotSet::setLocation(const Location location)
+{
+    // Set position
+    const auto coord = mapMandelbrotCoordsToWin(location.position);
+    view.left = coord.x - view.width / 2.0;
+    view.top = coord.y - view.height / 2.0;
+
+    // Set zoom
+    const auto center = sf::Vector2<f_type>{ view.left + view.width / 2.0, view.top + view.height / 2.0 };
+    view.width = static_cast<f_type>(win.getSize().x) / location.zoom;
+    view.height = static_cast<f_type>(win.getSize().y) / location.zoom;
+    view.left = center.x - view.width / 2.0;
+    view.top = center.y - view.height / 2.0;
+}
+
 void MandelbrotSet::onResize()
 {
     needs_update = true;
@@ -113,10 +128,20 @@ void MandelbrotSet::gui()
 
         ImGui::EndTabItem();
     }
-    if (ImGui::BeginTabItem("THEME"))
+    if (ImGui::BeginTabItem("THEMES"))
     {
         needs_update = themes.gui() ? true : needs_update;
 
+        ImGui::EndTabItem();
+    }
+    if (ImGui::BeginTabItem("LOCATIONS"))
+    {
+        const auto location_optional = locations.gui();
+        if (location_optional.has_value())
+        {
+            setLocation(location_optional.value());
+            needs_update = true;
+        }
         ImGui::EndTabItem();
     }
     if (ImGui::BeginTabItem("SCREENSHOT"))

@@ -5,13 +5,13 @@ ThemeManager::ThemeManager()
     loadThemes();
 }
 
+// TODO: Add safety for deletion
 void ThemeManager::loadThemes()
 {
     for (const auto& entry : std::filesystem::directory_iterator("themes"))
     {
         if (!std::filesystem::is_regular_file(entry) || 
-            entry.path().extension().string() != ".json" ||
-            entry.path().filename().string() == "default_theme.json")
+            entry.path().extension().string() != ".json")
             continue;
 
         nlohmann::json json{};
