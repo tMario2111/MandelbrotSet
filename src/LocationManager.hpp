@@ -7,6 +7,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <iomanip>
 #include <optional>
 #include <string>
 #include <utility>
@@ -25,7 +26,7 @@ class LocationManager
 public:
     LocationManager();
 
-    std::optional<Location> gui();
+    std::optional<Location> gui(Location current_location);
 private:
     struct NamedLocation
     {
@@ -35,6 +36,7 @@ private:
 
     std::vector<NamedLocation> named_locations;
     unsigned int selected_named_location_index = 0;
+    std::string new_location_name;
 
     void loadLocations();
 };

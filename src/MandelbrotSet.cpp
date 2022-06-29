@@ -136,7 +136,8 @@ void MandelbrotSet::gui()
     }
     if (ImGui::BeginTabItem("LOCATIONS"))
     {
-        const auto location_optional = locations.gui();
+        const auto center = sf::Vector2<f_type>{ view.left + view.width / 2.0, view.top + view.height / 2.0 };
+        const auto location_optional = locations.gui(Location{ mapWinCoordsToMandelbrot(center), getZoom() });
         if (location_optional.has_value())
         {
             setLocation(location_optional.value());
