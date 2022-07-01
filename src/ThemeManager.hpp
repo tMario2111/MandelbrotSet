@@ -9,7 +9,6 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <memory>
 #include <string>
 #include <vector>
 
@@ -41,14 +40,16 @@ class ThemeManager
 public:
     ThemeManager();
 
-    Theme* getSelectedTheme();
+    Theme getSelectedTheme();
     bool gui();
 private:
-    std::vector<std::unique_ptr<Theme>> themes;
+    std::vector<Theme> themes;
     unsigned int selected_theme_index;
+    std::string theme_name;
 
-    void copyThemeToJson(Theme* theme, nlohmann::json& json);
-    void writeThemeToFile(Theme* theme, const nlohmann::json& json);
+    void reload();
+    void copyThemeToJson(Theme theme, nlohmann::json& json);
+    void writeThemeToFile(Theme theme, const nlohmann::json& json);
     void loadThemes(); 
     void saveNewTheme();
     void deleteSelectedTheme();

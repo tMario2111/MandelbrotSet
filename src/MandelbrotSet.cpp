@@ -306,7 +306,7 @@ void MandelbrotSet::render()
     f_type it;
     unsigned int i, j;
     f_type r_aux, g_aux, b_aux;
-    auto selected_theme = themes.getSelectedTheme();
+    const auto selected_theme = themes.getSelectedTheme();
     if (needs_update)
     {
         needs_update = false;
@@ -316,26 +316,26 @@ void MandelbrotSet::render()
                 k = i * win.getSize().y + j;
                 it = static_cast<f_type>(points[k]);
 
-                if (selected_theme->r_func == ColorFunction::Sin)
-                    r_aux = 0.5 * sin(it * a + selected_theme->r_modifier);
-                else if (selected_theme->r_func == ColorFunction::Cos)
-                    r_aux = 0.5 * cos(it * a + selected_theme->r_modifier);
+                if (selected_theme.r_func == ColorFunction::Sin)
+                    r_aux = 0.5 * sin(it * a + selected_theme.r_modifier);
+                else if (selected_theme.r_func == ColorFunction::Cos)
+                    r_aux = 0.5 * cos(it * a + selected_theme.r_modifier);
                 else 
-                    r_aux = 0.5 * tan(it * a + selected_theme->r_modifier); 
+                    r_aux = 0.5 * tan(it * a + selected_theme.r_modifier); 
 
-                if (selected_theme->g_func == ColorFunction::Sin)
-                    g_aux = 0.5 * sin(it * a + selected_theme->g_modifier);
-                else if (selected_theme->g_func == ColorFunction::Cos)
-                    g_aux = 0.5 * cos(it * a + selected_theme->g_modifier);
+                if (selected_theme.g_func == ColorFunction::Sin)
+                    g_aux = 0.5 * sin(it * a + selected_theme.g_modifier);
+                else if (selected_theme.g_func == ColorFunction::Cos)
+                    g_aux = 0.5 * cos(it * a + selected_theme.g_modifier);
                 else 
-                    g_aux = 0.5 * tan(it * a + selected_theme->g_modifier); 
+                    g_aux = 0.5 * tan(it * a + selected_theme.g_modifier); 
 
-                if (selected_theme->b_func == ColorFunction::Sin)
-                    b_aux = 0.5 * sin(it * a + selected_theme->b_modifier);
-                else if (selected_theme->b_func == ColorFunction::Cos)
-                    b_aux = 0.5 * cos(it * a + selected_theme->b_modifier);
+                if (selected_theme.b_func == ColorFunction::Sin)
+                    b_aux = 0.5 * sin(it * a + selected_theme.b_modifier);
+                else if (selected_theme.b_func == ColorFunction::Cos)
+                    b_aux = 0.5 * cos(it * a + selected_theme.b_modifier);
                 else 
-                    b_aux = 0.5 * tan(it * a + selected_theme->b_modifier); 
+                    b_aux = 0.5 * tan(it * a + selected_theme.b_modifier); 
 
                 vertices[k].color.r = static_cast<sf::Uint8>(255.0 * (r_aux + 0.5));
                 vertices[k].color.g = static_cast<sf::Uint8>(255.0 * (g_aux + 0.5));
