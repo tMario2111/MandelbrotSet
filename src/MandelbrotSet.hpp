@@ -45,7 +45,6 @@ private:
     sf::Time render_time;
 
     sf::VertexArray vertices;
-    std::vector<unsigned int> points;
 
     ThemeManager themes;
     LocationManager locations;
