@@ -153,6 +153,13 @@ void MandelbrotSet::gui()
 
         ImGui::EndTabItem();
     }
+    if (ImGui::BeginTabItem("INFO"))
+    {
+        auto str = std::to_string(render_time.asSeconds()) + " seconds";
+        ImGui::Text("%s", str.c_str());
+
+        ImGui::EndTabItem();
+    }
 
     ImGui::EndTabBar();
     ImGui::End();
@@ -288,6 +295,8 @@ void MandelbrotSet::update()
 
     if (!needs_update)
         return;
+    
+    render_clock.restart();
 
     std::vector<std::thread> threads;
     threads.resize(thread_count);
@@ -341,6 +350,7 @@ void MandelbrotSet::render()
                 vertices[k].color.g = static_cast<sf::Uint8>(255.0 * (g_aux + 0.5));
                 vertices[k].color.b = static_cast<sf::Uint8>(255.0 * (b_aux + 0.5));
             }
+        render_time = render_clock.getElapsedTime();
     }
     win.draw(vertices);
 }

@@ -41,6 +41,9 @@ private:
     f_type domain_x_1, domain_x_s;
     f_type domain_y_1, domain_y_s;
 
+    sf::Clock render_clock;
+    sf::Time render_time;
+
     sf::VertexArray vertices;
     std::vector<unsigned int> points;
 
