@@ -52,6 +52,8 @@ private:
     sf::Vector2<f_type> mandelbrot_coords;
     f_type zoom;
 
+    std::vector<std::thread> threads;
+
     bool needs_update = true;
     int max_iterations = 100;
     int thread_count = 1;

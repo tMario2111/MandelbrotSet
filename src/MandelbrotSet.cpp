@@ -7,6 +7,10 @@ MandelbrotSet::MandelbrotSet(sf::RenderWindow& win, Input& input) :
     vertices{ sf::PrimitiveType::Points }
 {
     onResize();
+
+    thread_count = std::thread::hardware_concurrency();
+    threads.resize(thread_count);
+    std::cout << "Number of threads: " << thread_count << '\n';
 }
 
 sf::Vector2<f_type> MandelbrotSet::mapWinCoordsToMandelbrot(sf::Vector2<f_type> a)
@@ -118,10 +122,6 @@ void MandelbrotSet::gui()
 
         if (ImGui::SliderInt("Iterations", &max_iterations, 100, 1000))
             needs_update = true;
-
-        spacing();
-
-        ImGui::SliderInt("Threads", &thread_count, 1, 32);
 
         spacing();
 
@@ -278,6 +278,8 @@ void MandelbrotSet::fractal(unsigned int c_thread)
             x = 0.0, y = 0.0;
             x2 = 0.0, y2 = 0.0;
             iterations = 0;
+
+            // The heavy worker
             while (x2 + y2 <= 4.0 && iterations < max_iterations)
             {
                 y = 2 * x * y + y0;
@@ -330,9 +332,6 @@ void MandelbrotSet::update()
         return;
     
     render_clock.restart();
-
-    std::vector<std::thread> threads;
-    threads.resize(thread_count);
 
     for (auto i = 0u; i < thread_count; i++)
         threads[i] = std::thread{ &MandelbrotSet::fractal, this, i };

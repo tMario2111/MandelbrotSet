@@ -13,9 +13,9 @@ int main()
 #endif
 
 #ifdef NDEBUG
-    std::cout << "Release\n";
+    std::cout << "Release mode\n";
 #else 
-    std::cout << "Debug\n";
+    std::cout << "Debug mode\n";
 #endif
 
     App app{};
