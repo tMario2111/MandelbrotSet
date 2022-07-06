@@ -3,8 +3,10 @@
 App::App()
 {
     setupWin();
+    loadAssets();
     setupGui();
-    set = std::make_unique<MandelbrotSet>(win, input);
+
+    set = std::make_unique<MandelbrotSet>(win, input, font);
     run();
 }
 
@@ -12,6 +14,11 @@ void App::setupWin()
 {
     win.create(prevMove, title, sf::Style::Close | sf::Style::Resize);
     win.setFramerateLimit(framerate_limit);
+}
+
+void App::loadAssets()
+{
+    font.loadFromFile("assets/VCR_OSD_MONO_1.001.ttf");
 }
 
 void App::setupGui()

@@ -17,6 +17,7 @@ public:
     App();
     sf::RenderWindow win;
     sf::Time dt;
+    sf::Font font;
 private:
     const std::string title = "Mandelbrot Set";
     const unsigned int framerate_limit = 30;
@@ -26,6 +27,7 @@ private:
     Input input;
     std::unique_ptr<MandelbrotSet> set;
     void setupWin();
+    void loadAssets();
     void setupGui();
     void resizeEvent(const sf::Event& event);
     void toggleFullscreen();

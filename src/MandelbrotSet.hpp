@@ -1,5 +1,6 @@
 #pragma once
 
+#include "HintText.hpp"
 #include "Input.hpp"
 #include "LocationManager.hpp"
 #include "ThemeManager.hpp"
@@ -23,7 +24,7 @@ using f_type = double;
 class MandelbrotSet
 {
 public:
-    MandelbrotSet(sf::RenderWindow& win, Input& input);
+    MandelbrotSet(sf::RenderWindow& win, Input& input, sf::Font& font);
     void onResize();
     void update();
     void render();
@@ -46,6 +47,7 @@ private:
 
     sf::VertexArray vertices;
 
+    HintText hint_text;
     ThemeManager themes;
     LocationManager locations;
 

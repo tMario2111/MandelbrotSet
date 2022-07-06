@@ -8,6 +8,7 @@ add_executable(MandelbrotSet main.cpp
     src/MandelbrotSet.cpp src/MandelbrotSet.hpp
     src/ThemeManager.hpp src/ThemeManager.cpp 
     src/LocationManager.hpp src/LocationManager.cpp
+    src/HintText.hpp src/HintText.cpp
     src/Input.cpp src/Input.hpp)
 
 find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)

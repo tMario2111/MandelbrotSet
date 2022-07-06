@@ -1,10 +1,11 @@
 #include "MandelbrotSet.hpp"
 #include <imgui.h>
 
-MandelbrotSet::MandelbrotSet(sf::RenderWindow& win, Input& input) :
+MandelbrotSet::MandelbrotSet(sf::RenderWindow& win, Input& input, sf::Font& font) :
     win{ win },
     input{ input },
-    vertices{ sf::PrimitiveType::Points }
+    vertices{ sf::PrimitiveType::Points },
+    hint_text{ font }
 {
     onResize();
 
@@ -235,7 +236,7 @@ void MandelbrotSet::control()
 
 void MandelbrotSet::fractal(unsigned int c_thread)
 {
-    const unsigned int column_lenght = win.getSize().x / thread_count;
+    const auto column_lenght = win.getSize().x / thread_count;
 
     const f_type win_size_x = win.getSize().x;
     const f_type win_size_y = win.getSize().y;
@@ -327,6 +328,7 @@ void MandelbrotSet::update()
 {
     gui();
     control();
+    hint_text.update(win, input);
 
     if (!needs_update)
         return;
@@ -346,4 +348,5 @@ void MandelbrotSet::update()
 void MandelbrotSet::render()
 {
     win.draw(vertices);
+    win.draw(hint_text);
 }
