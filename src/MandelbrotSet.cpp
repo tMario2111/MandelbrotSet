@@ -236,7 +236,9 @@ void MandelbrotSet::control()
 
 void MandelbrotSet::fractal(unsigned int c_thread)
 {
-    const auto column_lenght = win.getSize().x / thread_count;
+    auto column_lenght = win.getSize().x / thread_count;
+    if (thread_count * column_lenght < win.getSize().x)
+        column_lenght++;
 
     const f_type win_size_x = win.getSize().x;
     const f_type win_size_y = win.getSize().y;
