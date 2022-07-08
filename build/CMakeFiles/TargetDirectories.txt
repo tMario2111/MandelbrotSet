@@ -1,3 +1,0 @@
-C:/dev/VSCode projects/c++/MandelbrotSet/build/CMakeFiles/MandelbrotSet.dir
-C:/dev/VSCode projects/c++/MandelbrotSet/build/CMakeFiles/edit_cache.dir
-C:/dev/VSCode projects/c++/MandelbrotSet/build/CMakeFiles/rebuild_cache.dir
