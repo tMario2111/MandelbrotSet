@@ -36,3 +36,7 @@ Softul a fost realizat integral în C++ pentru a asigura o perfomanță cât mai
 a împărți fereastra în mai multe fâșii verticale pe care se aplică, în paralel, un algoritm eficient de calculare a 
 fractalului, astfel maximizând performanța. Randarea se face eficient, fiind nevoie de o singură operațiune de desenare
 pentru tot fractalul. Codul este abstractizat si modularizat, întrucât am folosit programare orientată pe obiecte.
+
+![overview](https://github.com/tMario2111/MandelbrotSet/blob/master/screenshots/overview.png)
+![JuliaIsland](https://github.com/tMario2111/MandelbrotSet/blob/master/screenshots/JuliaIsland.png)
+![Seahorse](https://github.com/tMario2111/MandelbrotSet/blob/master/screenshots/Seahorse.png)
