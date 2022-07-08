@@ -22,7 +22,7 @@ void HintText::update(sf::RenderWindow& win, Input& input)
         view.getCenter().x - view.getSize().x / 2,
         view.getCenter().y - view.getSize().y / 2
     );
-    if (input.isKeyReleased(sf::Keyboard::H))
+    if (!ImGui::GetIO().WantCaptureKeyboard && input.isKeyReleased(sf::Keyboard::H))
     {
         if (hidden)
             hidden = false;

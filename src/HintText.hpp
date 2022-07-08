@@ -2,6 +2,7 @@
 
 #include "Input.hpp"
 
+#include <imgui.h>
 #include <nlohmann/json.hpp>
 #include <SFML/Graphics.hpp>
 

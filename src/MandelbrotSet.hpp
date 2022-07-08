@@ -60,6 +60,7 @@ private:
     int max_iterations = 100;
     int thread_count = 1;
     char screenshot_name[101] = "screenshot";
+    bool black_accent_color = false;
 
     sf::Vector2<f_type> mapWinCoordsToMandelbrot(sf::Vector2<f_type> a);
     sf::Vector2<f_type> mapMandelbrotCoordsToWin(sf::Vector2<f_type> a);

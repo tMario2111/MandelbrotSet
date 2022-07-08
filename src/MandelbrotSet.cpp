@@ -126,6 +126,9 @@ void MandelbrotSet::gui()
 
         spacing();
 
+        if (ImGui::Checkbox("Black accent color", &black_accent_color))
+            needs_update = true;
+
         ImGui::EndTabItem();
     }
     if (ImGui::BeginTabItem("THEMES"))
@@ -316,9 +319,18 @@ void MandelbrotSet::fractal(unsigned int c_thread)
                 b_aux = 0.5 * tan(it * a + selected_theme.b_modifier);
 
             k = i * win.getSize().y + j;
-            vertices[k].color.r = static_cast<sf::Uint8>(255.0 * (r_aux + 0.5));
-            vertices[k].color.g = static_cast<sf::Uint8>(255.0 * (g_aux + 0.5));
-            vertices[k].color.b = static_cast<sf::Uint8>(255.0 * (b_aux + 0.5));
+            if (it == max_iterations && black_accent_color)
+            {
+                vertices[k].color.r = 0;
+                vertices[k].color.b = 0;
+                vertices[k].color.g = 0;
+            }
+            else 
+            {
+                vertices[k].color.r = static_cast<sf::Uint8>(255.0 * (r_aux + 0.5));
+                vertices[k].color.g = static_cast<sf::Uint8>(255.0 * (g_aux + 0.5));
+                vertices[k].color.b = static_cast<sf::Uint8>(255.0 * (b_aux + 0.5));
+            }
 
             top += increment_y;
         }
