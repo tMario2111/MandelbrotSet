@@ -26,7 +26,8 @@ Printr-o singură apăsare de buton acesta poate ajunge direct la structura stud
 
 ## Capturi de ecran ##
 
-Aplicația oferă posibilitatea de a salva capturi de ecran la rezoluție maximă, nefiind nevoie de programe externe.
+Aplicația oferă posibilitatea de a salva capturi de ecran la rezoluție maximă și locația acestora (în format *json*), 
+nefiind nevoie de programe externe.
 
 ## Descriere tehnică ##
 
