@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Utility.hpp"
+
 #include <imgui.h>
 #include <imgui_stdlib.h>
 #include <nlohmann/json.hpp>
@@ -11,8 +13,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
-using f_type = double; // Should probably use a template
 
 enum ColorFunction
 {

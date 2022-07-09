@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Utility.hpp"
+
 #include <imgui.h>
 #include <imgui_stdlib.h>
 #include <nlohmann/json.hpp>
@@ -12,8 +14,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-
-using f_type = double; // TODO: This isn't good, maybe use templates or global type alias
 
 struct Location
 {

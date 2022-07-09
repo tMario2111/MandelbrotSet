@@ -4,6 +4,7 @@
 #include "Input.hpp"
 #include "LocationManager.hpp"
 #include "ThemeManager.hpp"
+#include "Utility.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <imgui.h>
@@ -18,8 +19,6 @@
 #include <string>
 #include <thread>
 #include <vector>
-
-using f_type = double;
 
 class MandelbrotSet
 {

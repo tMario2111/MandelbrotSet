@@ -9,7 +9,8 @@ add_executable(MandelbrotSet main.cpp
     src/ThemeManager.hpp src/ThemeManager.cpp 
     src/LocationManager.hpp src/LocationManager.cpp
     src/HintText.hpp src/HintText.cpp
-    src/Input.cpp src/Input.hpp)
+    src/Input.cpp src/Input.hpp
+    src/Utility.hpp)
 
 find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
