@@ -158,7 +158,7 @@ void MandelbrotSet::gui()
     }
     if (ImGui::BeginTabItem("INFO"))
     {
-        auto str = std::to_string(render_time.asSeconds()) + " seconds";
+        auto str = "Render time: " + std::to_string(render_time.asSeconds()) + " seconds";
         ImGui::Text("%s", str.c_str());
 
         ImGui::EndTabItem();
